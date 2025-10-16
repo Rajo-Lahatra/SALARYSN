@@ -412,7 +412,7 @@
 <div class="container">
     <div class="header">
         <h1>💰 Simulateur de Salaire Sénégal</h1>
-        <p class="subtitle">Calculez votre salaire net en tenant compte de l'IR, des cotisations IPRES et de la TRIMF (Version 2024 Corrigée)</p>
+        <p class="subtitle">Calculez votre salaire net en tenant compte de l'IR, des cotisations IPRES et de la TRIMF</p>
     </div>
 
     <div class="grid">
@@ -553,7 +553,7 @@
         { value: "prime_panier", label: "Prime panier" },
         { value: "autre", label: "Autre indemnité" }];
 
-    // PARAMÈTRES IPRES 2024 (CORRIGÉS)
+    // PARAMÈTRES IPRES 
     // Plafond Régime Général : 432 000 F CFA
     const IPRES_GEN_PLAF = 432000;
     // Plafond Complémentaire (Tranche 2) : 1 296 000 F CFA
@@ -846,7 +846,7 @@
 
             // Message de statut
             $("#status").className = "status-message status-success";
-            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024 (IPRES/IR Corrigés)`;
+            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""}`;
         } catch (error) {
             console.error("Erreur dans updateUI:", error);
             $("#status").className = "status-message status-warning";
@@ -956,7 +956,7 @@
             // Pied de page
             doc.setFontSize(8);
             doc.setTextColor(128, 128, 128);
-            doc.text("Ce document a été généré automatiquement par le simulateur de salaire Sénégal (Calculs 2024 Corrigés)",
+            doc.text("Ce document a été généré automatiquement par le simulateur de salaire Sénégal",
                 105, 290, { align: 'center' });
 
             // Sauvegarde du PDF
