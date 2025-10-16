@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simulateur de Salaire Sénégal développé par Rémy Kama</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --text-light: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+  background: linear-gradient(135deg, var(--bg-dark) 0%, #1e1b4b 100%);
+  color: var(--text-light);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--bg-card);
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.card h3 {
+  margin-top: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--primary);
+}
+
+.card h3::before {
+  content: "📊";
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: rgba(15, 23, 42, 0.7);
+  color: var(--text-light);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+button {
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  color: white;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
+  color: white;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  flex: 1;
+  min-width: 120px;
+}
+
+.money {
+  font-weight: 600;
+  color: var(--success);
+}
+
+.money.negative {
+  color: var(--danger);
+}
+
+.money::before {
+  content: "F CFA ";
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.results-table th,
+.results-table td {
+  padding: 12px 15px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+
+.results-table th:first-child,
+.results-table td:first-child {
+  text-align: left;
+}
+
+.results-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.results-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.highlight {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-left: 4px solid var(--success);
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.summary-card .value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.summary-card .label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.status-message {
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.status-success {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.status-info {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.status-warning {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid var(--warning);
+  color: var(--warning);
+}
+
+.emoji {
+  font-size: 1.2em;
+  margin-right: 5px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: "ℹ️";
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.tooltip:hover::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+.pdf-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.hidden {
+  display: none;
+}
+
+.indemnites-section {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.indemnite-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.indemnite-item select,
+.indemnite-item input {
+  flex: 1;
+}
+
+.remove-indemnite {
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.salaire-composition {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.total-brut {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  font-weight: 600;
+  text-align: center;
+}
+
+.info-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.info-section h4 {
+  margin-top: 0;
+  color: var(--primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>💰 Simulateur de Salaire Sénégal - Créé par Rémy Kama</h1>
+    <p class="subtitle">Rémy Kama est un éminent juriste fiscaliste travaillant dans le plus grand cabinet d'Afrique (voire du monde)</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="infos">👥 Informations</button>
+    <button class="tab" data-tab="calcul">🧮 Calcul</button>
+    <button class="tab" data-tab="resultats">📊 Résultats</button>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="tab-content active" id="infos-tab">
+        <h3>Informations sur l'Employeur & l'Employé</h3>
+        
+        <div class="info-section">
+          <h4>🏢 Informations Employeur</h4>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Nom de l'entreprise</label>
+              <input id="employeurNom" type="text" placeholder="Ex: Excellence SARL">
+            </div>
+            <div class="input-group">
+              <label>NINEA</label>
+              <input id="employeurNinea" type="text" placeholder="123456789">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Adresse</label>
+            <input id="employeurAdresse" type="text" placeholder="Rue 10, Dakar">
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Téléphone</label>
+              <input id="employeurTelephone" type="text" placeholder="33 123 45 67">
+            </div>
+            <div class="input-group">
+              <label>Email</label>
+              <input id="employeurEmail" type="email" placeholder="contact@entreprise.sn">
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h4>👤 Informations Employé</h4>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Nom</label>
+              <input id="employeNom" type="text" placeholder="DIOP">
+            </div>
+            <div class="input-group">
+              <label>Prénom</label>
+              <input id="employePrenom" type="text" placeholder="Mactar">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Numéro CNI</label>
+              <input id="employeCni" type="text" placeholder="123456789012">
+            </div>
+            <div class="input-group">
+              <label>Date d'embauche</label>
+              <input id="employeDateEmbauche" type="date">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Poste occupé</label>
+            <input id="employePoste" type="text" placeholder="Chef de projet">
+          </div>
+          <div class="form-row">
+            <div class="input-group">
+              <label>Matricule</label>
+              <input id="employeMatricule" type="text" placeholder="EMP001">
+            </div>
+            <div class="input-group">
+              <label>Statut</label>
+              <select id="employeStatut">
+                <option value="cdi">CDI</option>
+                <option value="cdd">CDD</option>
+                <option value="stagiaire">Stagiaire</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button id="nextToCalcul" class="btn-primary">➡️ Passer au calcul</button>
+        </div>
+      </div>
+
+      <div class="tab-content" id="calcul-tab">
+        <h3>Paramètres de calcul</h3>
+        
+        <div class="input-group">
+          <label>Période de calcul</label>
+          <select id="period">
+            <option value="monthly">📅 Mensuel</option>
+            <option value="annual">📊 Annuel</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Statut professionnel</label>
+          <select id="cadre">
+            <option value="non">👨‍💼 Non-cadre</option>
+            <option value="cadre">👨‍💼 Cadre</option>
+          </select>
+        </div>
+
+        <div class="salaire-composition">
+          <h4 style="margin-top: 0; color: var(--primary);">Composition du salaire</h4>
+          
+          <div class="input-group">
+            <label>Salaire de base <span class="tooltip" data-tooltip="Salaire fixe avant additions"></span></label>
+            <input id="salaireBase" type="number" placeholder="ex : 300 000">
+          </div>
+
+          <div class="indemnites-section">
+            <label>Éléments de rémunération additionnels</label>
+            <div id="indemnites-container">
+              </div>
+            <button type="button" id="ajouterIndemnite" class="btn-warning" style="margin-top: 10px;">➕ Ajouter un élément</button>
+          </div>
+
+          <div class="total-brut">
+            <div>Salaire brut total: <span id="totalBrutAffichage" class="money">0</span></div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label>Parts familiales (IR) <span class="tooltip" data-tooltip="Ex: 1=Célibataire, 1.5=Marié(e), 2=Marié(e) 1 enfant, etc."></span></label>
+          <input id="partsIR" type="number" step="0.5" value="1" min="1">
+        </div>
+
+        <div class="input-group">
+          <label>Activer la TRIMF <span class="tooltip" data-tooltip="Taxe minimum alternative à l'IR. L'impôt retenu sera le plus élevé des deux."></span></label>
+          <select id="trimfActive">
+            <option value="yes">✅ Activée (Recommandé)</option>
+            <option value="no">❌ Désactivée</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button id="calcBtn" class="btn-primary">🚀 Calculer mon salaire</button>
+          <button id="prevToInfos" class="btn-secondary">⬅️ Retour aux infos</button>
+          <button id="resetBtn" class="btn-secondary">🔄 Réinitialiser</button>
+        </div>
+      </div>
+
+      <div class="tab-content" id="resultats-tab">
+        <h3>Résultats détaillés</h3>
+        
+        <div id="summaryCards" class="summary-cards">
+          <div class="summary-card">
+            <div class="label">Salaire Net Mensuel</div>
+            <div id="netMensuel" class="value money">-</div>
+            <div class="label">Après impôts</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Impôt Total Annuel</div>
+            <div id="impotTotal" class="value money negative">-</div>
+            <div class="label">IR + Cotisations</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Taux Effectif</div>
+            <div id="tauxEffectif" class="value">-</div>
+            <div class="label">Imposition réelle</div>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Élément</th>
+              <th>Mensuel</th>
+              <th>Annuel</th>
+            </tr>
+          </thead>
+          <tbody id="detail"></tbody>
+        </table>
+
+        <div id="pdfSection" class="pdf-section hidden">
+          <div class="button-group">
+            <button id="pdfBtn" class="btn-success">📄 Générer le PDF</button>
+            <button id="prevToCalcul" class="btn-secondary">⬅️ Retour au calcul</button>
+          </div>
+        </div>
+
+        <div id="status" class="status-message status-info">
+          ⏳ En attente de calcul...
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Aperçu du bulletin</h3>
+      <div id="employeurInfo" style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary);">Employeur</h4>
+        <div id="employeurPreview" style="color: var(--text-muted); font-size: 14px;">
+          Aucune information renseignée
+        </div>
+      </div>
+      
+      <div id="employeInfo" style="margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary);">Employé</h4>
+        <div id="employePreview" style="color: var(--text-muted); font-size: 14px;">
+          Aucune information renseignée
+        </div>
+      </div>
+
+      <div style="padding: 15px; background: rgba(255,255,255,0.03); border-radius: 8px;">
+        <h4 style="margin: 0 0 15px 0; color: var(--primary);">Détails du calcul</h4>
+        <div id="calculPreview" style="color: var(--text-muted);">
+          Le calcul apparaîtra ici après saisie des informations
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Variables globales pour stocker les résultats
+let dernierCalcul = null;
+const { jsPDF } = window.jspdf;
+
+const $ = (s) => document.querySelector(s);
+// Fonction de formatage avec espace comme séparateur de milliers
+const fmt = (n) => {
+  if (!isFinite(n)) return "0";
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+// Liste des types d'indemnités
+const typesIndemnites = [
+  { value: "prime_anciennete", label: "Prime d'ancienneté" },
+  { value: "prime_rendement", label: "Prime de rendement" },
+  { value: "indemnite_transport", label: "Indemnité de transport" },
+  { value: "indemnite_logement", label: "Indemnité de logement" },
+  { value: "indemnite_fonction", label: "Indemnité de fonction" },
+  { value: "indemnite_technicite", label: "Indemnité de technicité" },
+  { value: "prime_projet", label: "Prime de projet" },
+  { value: "bonus", label: "Bonus" },
+  { value: "heures_supp", label: "Heures supplémentaires" },
+  { value: "indemnite_deplacement", label: "Indemnité de déplacement" },
+  { value: "indemnite_risque", label: "Indemnité de risque" },
+  { value: "prime_panier", label: "Prime panier" },
+  { value: "autre", label: "Autre indemnité" }
+];
+
+// PARAMÈTRES LÉGAUX CORRIGÉS
+// Plafonds et taux IPRES (mis à jour)
+const IPRES_GEN_PLAF_MENSUEL = 360000;
+const IPRES_COMP_PLAF_MENSUEL = 1080000; // 3 * 360000
+const IPRES_GEN_TAUX_SALARIAL = 0.056; // 5.6%
+const IPRES_COMP_TAUX_SALARIAL = 0.024; // 2.4%
+
+// Barème annuel de l'IR (corrigé)
+const BAREME_IR_ANNUEL = [
+    { seuil: 630000, taux: 0 },
+    { seuil: 1500000, taux: 0.20 },
+    { seuil: 4000000, taux: 0.30 },
+    { seuil: 8000000, taux: 0.35 },
+    { seuil: 13500000, taux: 0.37 },
+    { seuil: Infinity, taux: 0.40 }
+];
+
+// Gestion des indemnités
+let indemnites = [];
+
+// Gestion des onglets
+function changerOnglet(onglet) {
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+  
+  document.querySelector(`[data-tab="${onglet}"]`).classList.add('active');
+  document.getElementById(`${onglet}-tab`).classList.add('active');
+}
+
+function ajouterIndemnite() {
+  const id = Date.now();
+  indemnites.push({ id, type: "prime_anciennete", montant: 0 });
+  afficherIndemnites();
+  calculerTotalBrut();
+}
+
+function supprimerIndemnite(id) {
+  indemnites = indemnites.filter(ind => ind.id !== id);
+  afficherIndemnites();
+  calculerTotalBrut();
+}
+
+function afficherIndemnites() {
+  const container = $("#indemnites-container");
+  container.innerHTML = '';
+  
+  indemnites.forEach((indemnite) => {
+    const div = document.createElement('div');
+    div.className = 'indemnite-item';
+    div.innerHTML = `
+      <select data-id="${indemnite.id}" class="type-indemnite">
+        ${typesIndemnites.map(type => 
+          `<option value="${type.value}" ${indemnite.type === type.value ? 'selected' : ''}>${type.label}</option>`
+        ).join('')}
+      </select>
+      <input type="number" data-id="${indemnite.id}" class="montant-indemnite" placeholder="Montant" value="${indemnite.montant}">
+      <button type="button" class="remove-indemnite" data-id="${indemnite.id}">🗑️</button>
+    `;
+    container.appendChild(div);
+  });
+
+  container.querySelectorAll('.type-indemnite').forEach(select => {
+    select.addEventListener('change', (e) => {
+      const id = parseInt(e.target.dataset.id);
+      const indemnite = indemnites.find(ind => ind.id === id);
+      if (indemnite) indemnite.type = e.target.value;
+    });
+  });
+
+  container.querySelectorAll('.montant-indemnite').forEach(input => {
+    input.addEventListener('input', (e) => {
+      const id = parseInt(e.target.dataset.id);
+      const indemnite = indemnites.find(ind => ind.id === id);
+      if (indemnite) {
+        indemnite.montant = parseFloat(e.target.value) || 0;
+        calculerTotalBrut();
+      }
+    });
+  });
+
+  container.querySelectorAll('.remove-indemnite').forEach(button => {
+    button.addEventListener('click', (e) => {
+      supprimerIndemnite(parseInt(e.target.dataset.id));
+    });
+  });
+}
+
+function calculerTotalBrut() {
+  const salaireBase = parseFloat($("#salaireBase").value) || 0;
+  const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
+  const totalBrut = salaireBase + totalIndemnites;
+  
+  $("#totalBrutAffichage").textContent = fmt(totalBrut);
+  return totalBrut;
+}
+
+function mettreAJourApercu() {
+  const employeurNom = $("#employeurNom").value || "Non renseigné";
+  const employeurNinea = $("#employeurNinea").value || "Non renseigné";
+  const employeurAdresse = $("#employeurAdresse").value || "Non renseigné";
+  $("#employeurPreview").innerHTML = `
+    <div><strong>${employeurNom}</strong></div>
+    <div>NINEA: ${employeurNinea}</div>
+    <div>${employeurAdresse}</div>
+  `;
+
+  const employeNom = $("#employeNom").value || "Non renseigné";
+  const employePrenom = $("#employePrenom").value || "Non renseigné";
+  const employePoste = $("#employePoste").value || "Non renseigné";
+  const employeMatricule = $("#employeMatricule").value || "Non renseigné";
+  $("#employePreview").innerHTML = `
+    <div><strong>${employePrenom} ${employeNom}</strong></div>
+    <div>Poste: ${employePoste}</div>
+    <div>Matricule: ${employeMatricule}</div>
+  `;
+
+  const totalBrut = calculerTotalBrut();
+  if (totalBrut > 0) {
+    $("#calculPreview").innerHTML = `
+      <div>Salaire brut: <span class="money">${fmt(totalBrut)}</span></div>
+      <div>Période: ${$("#period").value === "monthly" ? "Mensuelle" : "Annuelle"}</div>
+      <div>Statut: ${$("#cadre").value === "cadre" ? "Cadre" : "Non-cadre"}</div>
+    `;
+  } else {
+     $("#calculPreview").innerHTML = "Le calcul apparaîtra ici après saisie des informations.";
+  }
+}
+
+// Fonction de calcul de l'IR progressif (corrigée)
+function impotProgressif(baseAnnuelle, parts, bareme) {
+    if (baseAnnuelle <= 0) return 0;
+    const quotient = baseAnnuelle / parts;
+    let impotTotalTranches = 0;
+    let tranchePrecedente = 0;
+
+    for (const tranche of bareme) {
+        if (quotient > tranchePrecedente) {
+            const baseTranche = Math.min(quotient, tranche.seuil) - tranchePrecedente;
+            impotTotalTranches += baseTranche * tranche.taux;
+            tranchePrecedente = tranche.seuil;
+            if (quotient <= tranche.seuil) break;
+        }
+    }
+    return impotTotalTranches * parts;
+}
+
+
+// Fonction de calcul de la TRIMF (corrigée)
+function calculerTrimfAnnuelle(brutMensuel) {
+    let trimfMensuelle = 0;
+    if (brutMensuel <= 60000) trimfMensuelle = 0;
+    else if (brutMensuel <= 100000) trimfMensuelle = 1800;
+    else if (brutMensuel <= 200000) trimfMensuelle = 3000;
+    else if (brutMensuel <= 300000) trimfMensuelle = 4800;
+    else if (brutMensuel <= 500000) trimfMensuelle = 7200;
+    else if (brutMensuel <= 1000000) trimfMensuelle = 12000;
+    else trimfMensuelle = 18000;
+    return trimfMensuelle * 12;
+}
+
+
+function calc() {
+  try {
+    const totalBrut = calculerTotalBrut();
+    if (totalBrut <= 0) {
+      $("#status").className = "status-message status-warning";
+      $("#status").innerHTML = "⚠️ Veuillez saisir un salaire brut positif";
+      $("#pdfSection").classList.add("hidden");
+      return;
+    }
+
+    const cadre = $("#cadre").value;
+    const partsIR = parseFloat($("#partsIR").value) || 1;
+    const trimfActive = $("#trimfActive").value === "yes";
+    const period = $("#period").value;
+
+    let brutMensuel = period === "annual" ? totalBrut / 12 : totalBrut;
+    let salaireBaseMensuel = period === "annual" ? (parseFloat($("#salaireBase").value) || 0) / 12 : (parseFloat($("#salaireBase").value) || 0);
+
+    // 1. Calcul des cotisations IPRES (corrigé)
+    const cotisationGen = Math.min(brutMensuel, IPRES_GEN_PLAF_MENSUEL) * IPRES_GEN_TAUX_SALARIAL;
+    let cotisationComp = 0;
+    if (cadre === "cadre") {
+      const baseComp = Math.max(0, brutMensuel - IPRES_GEN_PLAF_MENSUEL);
+      const baseCompPlafonnee = Math.min(baseComp, IPRES_COMP_PLAF_MENSUEL - IPRES_GEN_PLAF_MENSUEL);
+      cotisationComp = baseCompPlafonnee * IPRES_COMP_TAUX_SALARIAL;
+    }
+    const totalCotisations = cotisationGen + cotisationComp;
+
+    // 2. Calcul de la base imposable
+    const baseSociale = brutMensuel - totalCotisations;
+    const abattementAnnuelMax = 900000;
+    const abattement = Math.min(baseSociale * 0.3, abattementAnnuelMax / 12);
+    const baseIRMensuelle = baseSociale - abattement;
+    const baseIRAnnuelle = baseIRMensuelle * 12;
+
+    // 3. Calcul IR théorique (corrigé)
+    const irTheorique = impotProgressif(baseIRAnnuelle, partsIR, BAREME_IR_ANNUEL);
+    
+    // 4. Calcul TRIMF et détermination de l'impôt retenu (corrigé)
+    const trimf = trimfActive ? calculerTrimfAnnuelle(brutMensuel) : 0;
+    const irRetenu = trimfActive ? Math.max(irTheorique, trimf) : irTheorique;
+    const irMensuel = irRetenu / 12;
+
+    // 5. Calcul du salaire net
+    const netMensuel = brutMensuel - totalCotisations - irMensuel;
+    const netAnnuel = netMensuel * 12;
+
+    // Stockage des résultats pour le PDF
+    dernierCalcul = {
+      brutMensuel,
+      totalIndemnitesMensuel: brutMensuel - salaireBaseMensuel,
+      cotisationGen,
+      cotisationComp,
+      totalCotisations,
+      baseSociale,
+      abattement,
+      baseIRMensuelle,
+      baseIRAnnuelle,
+      irTheorique,
+      trimf,
+      irRetenu,
+      irMensuel,
+      netMensuel,
+      netAnnuel,
+      trimfActive,
+      cadre,
+      partsIR,
+      period,
+      indemnites: indemnites.map(ind => ({
+        ...ind,
+        montantMensuel: period === 'annual' ? ind.montant / 12 : ind.montant
+      })),
+      salaireBase: salaireBaseMensuel,
+      employeur: {
+        nom: $("#employeurNom").value, ninea: $("#employeurNinea").value, adresse: $("#employeurAdresse").value,
+        telephone: $("#employeurTelephone").value, email: $("#employeurEmail").value
+      },
+      employe: {
+        nom: $("#employeNom").value, prenom: $("#employePrenom").value, cni: $("#employeCni").value,
+        dateEmbauche: $("#employeDateEmbauche").value, poste: $("#employePoste").value,
+        matricule: $("#employeMatricule").value, statut: $("#employeStatut").value
+      }
+    };
+
+    updateUI(dernierCalcul);
+    changerOnglet('resultats');
+
+  } catch (error) {
+    console.error("Erreur de calcul:", error);
+    $("#status").className = "status-message status-warning";
+    $("#status").innerHTML = "❌ Erreur lors du calcul - vérifiez les paramètres";
+    $("#pdfSection").classList.add("hidden");
+  }
+}
+
+function updateUI(results) {
+  try {
+    const {
+      brutMensuel, totalCotisations, irRetenu, netMensuel, netAnnuel,
+      cadre, salaireBase, indemnites, cotisationGen, cotisationComp,
+      baseSociale, abattement, baseIRMensuelle, baseIRAnnuelle,
+      irTheorique, trimfActive, trimf, irMensuel
+    } = results;
+
+    const impotTotalAnnuel = (totalCotisations * 12) + irRetenu;
+    const tauxEffectif = brutMensuel > 0 ? (impotTotalAnnuel / (brutMensuel * 12)) * 100 : 0;
+
+    $("#netMensuel").textContent = fmt(netMensuel);
+    $("#impotTotal").textContent = fmt(impotTotalAnnuel);
+    $("#tauxEffectif").textContent = tauxEffectif.toFixed(1) + "%";
+    
+    const progress = brutMensuel > 0 ? (netMensuel / brutMensuel) * 100 : 0;
+    $("#progressFill").style.width = `${Math.max(0, Math.min(100, progress))}%`;
+
+    const tbl = $("#detail");
+    tbl.innerHTML = "";
+
+    const lignes = [
+      ["💰 Salaire de base", salaireBase, salaireBase * 12, "money"],
+      ...indemnites.map(ind => {
+        const type = typesIndemnites.find(t => t.value === ind.type)?.label || "Indemnité";
+        return [`🎁 ${type}`, ind.montantMensuel, ind.montantMensuel * 12, "money"];
+      }),
+      ["---"],
+      ["💵 Total brut", brutMensuel, brutMensuel * 12, "money highlight"],
+      ["---"],
+      ["📉 IPRES général (5.6%)", -cotisationGen, -cotisationGen * 12, "money negative"],
+      ...(cadre === "cadre" && cotisationComp > 0 ? [["📉 IPRES complémentaire (2.4%)", -cotisationComp, -cotisationComp * 12, "money negative"]] : []),
+      ["📊 Base après cotisations", baseSociale, baseSociale * 12, "money"],
+      ["🎯 Abattement 30% (plafonné)", -abattement, -abattement * 12, "money negative"],
+      ["📝 Base imposable IR", baseIRMensuelle, baseIRAnnuelle, "money"],
+      ["---"],
+      ["🧮 IR théorique", -irTheorique / 12, -irTheorique, "money negative"],
+      ...(trimfActive ? [
+        ["🛡️ TRIMF (plancher)", -trimf / 12, -trimf, "money negative"],
+        ["🎯 IR retenu (le plus élevé des deux)", -irMensuel, -irRetenu, "money negative highlight"]
+      ] : [["🎯 IR retenu", -irMensuel, -irRetenu, "money negative highlight"]]),
+      ["---"],
+      ["💳 Net à payer", netMensuel, netAnnuel, "money highlight"]
+    ];
+
+    lignes.forEach(ligne => {
+      const tr = document.createElement("tr");
+      if (ligne[0] === "---") {
+        tr.innerHTML = `<td colspan="3" style="padding: 5px; background: var(--border);"></td>`;
+      } else {
+        const [label, mensuel, annuel, className] = ligne;
+        tr.innerHTML = `
+          <td>${label}</td>
+          <td class="${className}">${fmt(mensuel)}</td>
+          <td class="${className}">${fmt(annuel)}</td>
+        `;
+        if (className && className.includes('highlight')) {
+            tr.classList.add('highlight');
+        }
+      }
+      tbl.appendChild(tr);
+    });
+
+    $("#pdfSection").classList.remove("hidden");
+    $("#status").className = "status-message status-success";
+    $("#status").innerHTML = `✅ Calcul effectué avec succès ${trimfActive ? "(TRIMF activée)" : ""}`;
+    
+  } catch (error) {
+    console.error("Erreur dans updateUI:", error);
+    $("#status").className = "status-message status-warning";
+    $("#status").innerHTML = "❌ Erreur d'affichage des résultats";
+  }
+}
+
+function genererPDF() {
+  if (!dernierCalcul) {
+    alert("❌ Aucun calcul disponible pour générer le PDF");
+    return;
+  }
+  
+  try {
+    const doc = new jsPDF();
+    const { employeur, employe, salaireBase, indemnites, brutMensuel, totalCotisations, baseIRMensuelle, baseIRAnnuelle, irMensuel, irRetenu, netMensuel, netAnnuel } = dernierCalcul;
+
+    // En-tête
+    doc.setFillColor(99, 102, 241);
+    doc.rect(0, 0, 210, 50, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(20);
+    doc.text("BULLETIN DE PAIE (SIMULATION)", 105, 15, { align: 'center' });
+    doc.setFontSize(12);
+    doc.text("Généré par le simulateur de salaire Sénégal", 105, 25, { align: 'center' });
+    doc.text(`Période du: ${new Date().toLocaleDateString('fr-FR')}`, 105, 35, { align: 'center' });
+    
+    // Informations
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.text("EMPLOYEUR:", 20, 65);
+    doc.text(`Entreprise: ${employeur.nom || 'N/A'}`, 20, 72);
+    doc.text(`NINEA: ${employeur.ninea || 'N/A'}`, 20, 79);
+    doc.text(`Adresse: ${employeur.adresse || 'N/A'}`, 20, 86);
+    
+    doc.text("EMPLOYÉ:", 120, 65);
+    doc.text(`Nom: ${employe.prenom || ''} ${employe.nom || ''}`, 120, 72);
+    doc.text(`Poste: ${employe.poste || 'N/A'}`, 120, 79);
+    doc.text(`Matricule: ${employe.matricule || 'N/A'}`, 120, 86);
+    doc.text(`Statut: ${employe.statut || 'N/A'}`, 120, 93);
+    
+    let y = 105;
+    doc.setFontSize(16);
+    doc.text("DÉTAILS DU CALCUL", 20, y);
+    y += 10;
+    
+    // Tableaux
+    const tableColumn = ["Élément", "Montant Mensuel (F CFA)", "Montant Annuel (F CFA)"];
+    const rowsSalaire = [
+      ["Salaire de base", fmt(salaireBase), fmt(salaireBase * 12)],
+      ...indemnites.map(ind => {
+        const type = typesIndemnites.find(t => t.value === ind.type)?.label || "Indemnité";
+        return [type, fmt(ind.montantMensuel), fmt(ind.montantMensuel * 12)];
+      }),
+    ];
+     doc.autoTable({
+        head: [['GAINS', '', '']],
+        body: rowsSalaire,
+        startY: y, theme: 'striped', headStyles: { fillColor: [16, 185, 129] },
+        foot: [['TOTAL BRUT', fmt(brutMensuel), fmt(brutMensuel * 12)]],
+        footStyles: { fillColor: [22, 163, 74], textColor: 255, fontStyle: 'bold' }
+    });
+
+    const rowsRetenues = [
+      ["Cotisations IPRES", `-${fmt(totalCotisations)}`, `-${fmt(totalCotisations * 12)}`],
+      ["Impôt sur le Revenu (IR/TRIMF)", `-${fmt(irMensuel)}`, `-${fmt(irRetenu)}`],
+    ];
+    doc.autoTable({
+        head: [['RETENUES', '', '']],
+        body: rowsRetenues,
+        startY: doc.lastAutoTable.finalY + 2, theme: 'striped', headStyles: { fillColor: [239, 68, 68] },
+        foot: [['TOTAL RETENUES', `-${fmt(totalCotisations + irMensuel)}`, `-${fmt((totalCotisations*12) + irRetenu)}`]],
+        footStyles: { fillColor: [220, 38, 38], textColor: 255, fontStyle: 'bold' }
+    });
+    
+    // Résumé final
+    const finalY = doc.lastAutoTable.finalY + 15;
+    doc.setFontSize(14);
+    doc.setFillColor(99, 102, 241);
+    doc.setTextColor(255,255,255);
+    doc.rect(20, finalY - 5, 170, 10, 'F');
+    doc.text(`SALAIRE NET À PAYER: ${fmt(netMensuel)} F CFA`, 25, finalY + 2);
+    
+    // Pied de page
+    doc.setFontSize(8);
+    doc.setTextColor(128, 128, 128);
+    doc.text("Ce document est une simulation et n'a pas de valeur contractuelle.", 105, 290, { align: 'center' });
+    
+    // Sauvegarde
+    const date = new Date().toISOString().split('T')[0];
+    const nomEmploye = `${employe.prenom || ''}_${employe.nom || ''}`.replace(/[^a-zA-Z0-9]/g, '_');
+    doc.save(`simulation-salaire_${nomEmploye}_${date}.pdf`);
+    $("#status").className = "status-message status-success";
+    $("#status").innerHTML = "✅ PDF généré avec succès !";
+    
+  } catch (error) {
+    console.error("Erreur génération PDF:", error);
+    $("#status").className = "status-message status-warning";
+    $("#status").innerHTML = "❌ Erreur lors de la génération du PDF";
+  }
+}
+
+// Événements
+document.addEventListener('DOMContentLoaded', function() {
+  ajouterIndemnite();
+  
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => changerOnglet(tab.dataset.tab));
+  });
+
+  $("#nextToCalcul").addEventListener('click', () => changerOnglet('calcul'));
+  $("#prevToInfos").addEventListener('click', () => changerOnglet('infos'));
+  $("#prevToCalcul").addEventListener('click', () => changerOnglet('calcul'));
+
+  document.querySelectorAll('#employeurNom, #employeurNinea, #employeurAdresse, #employeurTelephone, #employeurEmail, #employeNom, #employePrenom, #employeCni, #employeDateEmbauche, #employePoste, #employeMatricule, #employeStatut').forEach(input => {
+    input.addEventListener('input', mettreAJourApercu);
+  });
+  
+  $("#calcBtn").addEventListener('click', calc);
+  $("#pdfBtn").addEventListener('click', genererPDF);
+  $("#ajouterIndemnite").addEventListener('click', ajouterIndemnite);
+  $("#salaireBase").addEventListener('input', calculerTotalBrut);
+  
+  $("#resetBtn").addEventListener('click', () => {
+    document.querySelectorAll('input[type=text], input[type=number], input[type=email], input[type=date]').forEach(input => input.value = '');
+    $("#partsIR").value = "1";
+    $("#trimfActive").value = "yes";
+    $("#period").value = "monthly";
+    $("#cadre").value = "non";
+    $("#employeStatut").value = "cdi";
+    indemnites = [];
+    afficherIndemnites();
+    $("#detail").innerHTML = "";
+    $("#status").className = "status-message status-info";
+    $("#status").innerHTML = "🔄 Données réinitialisées";
+    $("#netMensuel").textContent = "-";
+    $("#impotTotal").textContent = "-";
+    $("#tauxEffectif").textContent = "-";
+    $("#progressFill").style.width = "0%";
+    $("#pdfSection").classList.add("hidden");
+    $("#totalBrutAffichage").textContent = "0";
+    dernierCalcul = null;
+    mettreAJourApercu();
+  });
+  
+  document.querySelectorAll("#salaireBase, .montant-indemnite, #partsIR, #trimfActive, #cadre, #period").forEach(element => {
+    element.addEventListener("input", () => {
+      calculerTotalBrut();
+      mettreAJourApercu();
+      if (dernierCalcul) { // Recalculate if a previous calculation exists
+        clearTimeout(window.calcTimeout);
+        window.calcTimeout = setTimeout(calc, 500);
+      }
+    });
+  });
+
+  // Exemple pré-rempli pour démonstration
+  setTimeout(() => {
+    $("#employeurNom").value = "Excellence SARL Sénégal";
+    $("#employeurNinea").value = "SN-DKR-2024-A-12345";
+    $("#employeurAdresse").value = "Rue 12 x 21, Médina, Dakar";
+    $("#employeurTelephone").value = "33 821 00 00";
+    $("#employeurEmail").value = "contact@excellence.sn";
+    
+    $("#employeNom").value = "FALL";
+    $("#employePrenom").value = "Aïssatou";
+    $("#employeCni").value = "1 890 1995 01234";
+    $("#employePoste").value = "Développeuse Web";
+    $("#employeMatricule").value = "EMP-042";
+    
+    $("#salaireBase").value = "750000";
+    $("#partsIR").value = "2.5";
+    
+    mettreAJourApercu();
+  }, 500);
+});
+</script>
+</body>
+</html>
