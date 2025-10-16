@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>💰 Simulateur de Salaire Sénégal</title>
+    <title>💰 Simulateur de Salaire Sénégal 2024</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
@@ -78,6 +78,7 @@
             border: 1px solid var(--border);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px; /* Ajout d'une marge entre les cartes dans la même colonne */
         }
 
         .card:hover {
@@ -93,6 +94,11 @@
             color: var(--primary);
         }
 
+        /* Modifier l'icône pour les cartes d'identification */
+        #identificationCard h3::before {
+            content: "👤";
+        }
+        
         .card h3::before {
             content: "📊";
         }
@@ -192,7 +198,6 @@
         .money {
             font-weight: 600;
             color: var(--success);
-            /* La taille par défaut est ajustée dans la table ci-dessous */
         }
 
         .money.negative {
@@ -212,7 +217,7 @@
         }
 
         .results-table th, .results-table td {
-            padding: 12px 10px; /* Réduction du padding horizontal */
+            padding: 12px 10px;
             text-align: right;
             border-bottom: 1px solid var(--border);
         }
@@ -221,12 +226,10 @@
             text-align: left;
         }
         
-        /* 💡 CORRECTION APPORTÉE : Réduction de la taille de police pour les chiffres dans la table */
         .results-table .money {
-            font-size: 13px; /* Taille réduite */
-            white-space: nowrap; /* Empêche le retour à la ligne si possible */
+            font-size: 13px; /* Taille réduite pour les grands nombres */
+            white-space: nowrap; 
         }
-        /* Fin de la correction */
 
         .results-table tr:hover {
             background: rgba(255, 255, 255, 0.05);
@@ -412,69 +415,95 @@
 <div class="container">
     <div class="header">
         <h1>💰 Simulateur de Salaire Sénégal</h1>
-        <p class="subtitle">Calculez votre salaire net en tenant compte de l'IR, des cotisations IPRES et de la TRIMF</p>
+        <p class="subtitle">Calculez votre salaire net en tenant compte de l'IR, des cotisations IPRES et de la TRIMF (Version 2024 Corrigée)</p>
     </div>
 
     <div class="grid">
-        <div class="card">
-            <h3>Paramètres de calcul</h3>
+        <div>
+            <div class="card" id="identificationCard">
+                <h3>Identification (Optionnel)</h3>
+                
+                <h4 style="margin-top: 15px; color: var(--success);">Employé(e)</h4>
+                <div class="input-group">
+                    <label>Nom et Prénom</label>
+                    <input id="nomEmploye" type="text" placeholder="Nom complet de l'employé(e)">
+                </div>
+                <div class="input-group">
+                    <label>Poste / Fonction</label>
+                    <input id="posteEmploye" type="text" placeholder="ex : Directeur Commercial">
+                </div>
 
-            <div class="input-group">
-                <label>Période de calcul</label>
-                <select id="period">
-                    <option value="monthly">📅 Mensuel</option>
-                    <option value="annual">📊 Annuel</option>
-                </select>
+                <h4 style="margin-top: 25px; color: var(--warning);">Employeur</h4>
+                <div class="input-group">
+                    <label>Nom de l'entreprise</label>
+                    <input id="nomEntreprise" type="text" placeholder="ex : SeneTech SARL">
+                </div>
+                <div class="input-group">
+                    <label>NINEA / Adresse</label>
+                    <input id="nineaEntreprise" type="text" placeholder="NINEA ou adresse">
+                </div>
             </div>
-
-            <div class="input-group">
-                <label>Statut professionnel</label>
-                <select id="cadre">
-                    <option value="non">👨‍💼 Non-cadre</option>
-                    <option value="cadre">👨‍💼 Cadre</option>
-                </select>
-            </div>
-
-            <div class="salaire-composition">
-                <h4 style="margin-top: 0; color: var(--primary);">Composition du salaire</h4>
+            
+            <div class="card">
+                <h3>Paramètres de calcul</h3>
 
                 <div class="input-group">
-                    <label>Salaire de base <span class="tooltip" data-tooltip="Salaire fixe avant additions"></span></label>
-                    <input id="salaireBase" type="number" placeholder="ex : 400 000">
+                    <label>Période de calcul</label>
+                    <select id="period">
+                        <option value="monthly">📅 Mensuel</option>
+                        <option value="annual">📊 Annuel</option>
+                    </select>
                 </div>
-                <div class="indemnites-section">
-                    <label>Éléments de rémunération additionnels</label>
-                    <div id="indemnites-container">
-                        </div>
-                    <button type="button" id="ajouterIndemnite" class="btn-warning" style="margin-top: 10px;">➕ Ajouter un élément</button>
-                </div>
-                <div class="total-brut">
-                    <div>Salaire brut total: <span id="totalBrutAffichage" class="money">0</span></div>
-                </div>
-            </div>
 
-            <div class="input-group">
-                <label>Parts familiales (IR) <span class="tooltip" data-tooltip="1 part pour célibataire, +0.5 par enfant"></span></label>
-                <input id="partsIR" type="number" step="0.5" value="1" min="1">
-            </div>
-            <div class="input-group">
-                <label>Activer la TRIMF <span class="tooltip" data-tooltip="Taxe minimum alternative à l'IR"></span></label>
-                <select id="trimfActive">
-                    <option value="no">❌ Désactivée</option>
-                    <option value="yes">✅ Activée</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>TRIMF annuel par part</label>
-                <input id="trimfParPartAn" type="number" value="60000">
-            </div>
-            <div class="input-group">
-                <label>Nombre de parts TRIMF</label>
-                <input id="partsTRIMF" type="number" step="0.5" value="1" min="1">
-            </div>
-            <div class="button-group">
-                <button id="calcBtn" class="btn-primary">🚀 Calculer mon salaire</button>
-                <button id="resetBtn" class="btn-secondary">🔄 Réinitialiser</button>
+                <div class="input-group">
+                    <label>Statut professionnel</label>
+                    <select id="cadre">
+                        <option value="non">👨‍💼 Non-cadre</option>
+                        <option value="cadre">👨‍💼 Cadre</option>
+                    </select>
+                </div>
+
+                <div class="salaire-composition">
+                    <h4 style="margin-top: 0; color: var(--primary);">Composition du salaire</h4>
+
+                    <div class="input-group">
+                        <label>Salaire de base <span class="tooltip" data-tooltip="Salaire fixe avant additions"></span></label>
+                        <input id="salaireBase" type="number" placeholder="ex : 400 000">
+                    </div>
+                    <div class="indemnites-section">
+                        <label>Éléments de rémunération additionnels</label>
+                        <div id="indemnites-container">
+                            </div>
+                        <button type="button" id="ajouterIndemnite" class="btn-warning" style="margin-top: 10px;">➕ Ajouter un élément</button>
+                    </div>
+                    <div class="total-brut">
+                        <div>Salaire brut total: <span id="totalBrutAffichage" class="money">0</span></div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Parts familiales (IR) <span class="tooltip" data-tooltip="1 part pour célibataire, +0.5 par enfant"></span></label>
+                    <input id="partsIR" type="number" step="0.5" value="1" min="1">
+                </div>
+                <div class="input-group">
+                    <label>Activer la TRIMF <span class="tooltip" data-tooltip="Taxe minimum alternative à l'IR"></span></label>
+                    <select id="trimfActive">
+                        <option value="no">❌ Désactivée</option>
+                        <option value="yes">✅ Activée</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>TRIMF annuel par part</label>
+                    <input id="trimfParPartAn" type="number" value="60000">
+                </div>
+                <div class="input-group">
+                    <label>Nombre de parts TRIMF</label>
+                    <input id="partsTRIMF" type="number" step="0.5" value="1" min="1">
+                </div>
+                <div class="button-group">
+                    <button id="calcBtn" class="btn-primary">🚀 Calculer mon salaire</button>
+                    <button id="resetBtn" class="btn-secondary">🔄 Réinitialiser</button>
+                </div>
             </div>
         </div>
 
@@ -553,14 +582,10 @@
         { value: "prime_panier", label: "Prime panier" },
         { value: "autre", label: "Autre indemnité" }];
 
-    // PARAMÈTRES IPRES 
-    // Plafond Régime Général : 432 000 F CFA
+    // PARAMÈTRES IPRES 2024 (CORRIGÉS)
     const IPRES_GEN_PLAF = 432000;
-    // Plafond Complémentaire (Tranche 2) : 1 296 000 F CFA
     const IPRES_COMP_PLAF = 1296000; 
-    // Taux Salarié Régime Général : 5.6%
     const IPRES_GEN_TAUX = 0.056; 
-    // Taux Salarié Complémentaire (Cadres) : 2.4%
     const IPRES_COMP_TAUX = 0.024; 
 
     // Gestion des indemnités
@@ -660,10 +685,10 @@
                 {seuil: 630000, taux: 0.00},
                 {seuil: 1500000, taux: 0.20},
                 {seuil: 4000000, taux: 0.30},
-                {seuil: 8000000, taux: 0.35}, // Ajusté de 0.34 à 0.35
+                {seuil: 8000000, taux: 0.35},
                 {seuil: 13500000, taux: 0.38},
-                {seuil: 50000000, taux: 0.40}, // Nouvelle tranche intermédiaire
-                {seuil: Infinity, taux: 0.43} // Taux maximum
+                {seuil: 50000000, taux: 0.40}, 
+                {seuil: Infinity, taux: 0.43} 
             ];
 
             const salaireBase = parseFloat($("#salaireBase").value) || 0;
@@ -692,12 +717,11 @@
                 return sum + (montant || 0);
             }, 0);
 
-            // Calcul des cotisations IPRES (CORRIGÉ)
+            // Calcul des cotisations IPRES 
             const cotisationGen = Math.min(brutMensuel, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
             let cotisationComp = 0;
 
             if (cadre === "cadre") {
-                // La base pour le complémentaire est entre IPRES_GEN_PLAF et IPRES_COMP_PLAF
                 const baseComplementaire = Math.max(brutMensuel - IPRES_GEN_PLAF, 0);
                 cotisationComp = Math.min(baseComplementaire, IPRES_COMP_PLAF - IPRES_GEN_PLAF) * IPRES_COMP_TAUX;
             }
@@ -706,7 +730,6 @@
 
             // Base sociale et abattement
             const baseSociale = brutMensuel - totalCotisations;
-            // Plafond annuel 900 000 F CFA
             const abattement = Math.min(baseSociale * 0.3, 900000 / 12);
             const baseIRMensuelle = baseSociale - abattement;
             const baseIRAnnuelle = baseIRMensuelle * 12;
@@ -723,7 +746,7 @@
             const netMensuel = brutMensuel - totalCotisations - irMensuel;
             const netAnnuel = netMensuel * 12;
 
-            // Stockage des résultats pour le PDF
+            // Stockage des résultats pour le PDF + Infos Employé/Employeur
             dernierCalcul = {
                 brutMensuel,
                 totalIndemnitesMensuel,
@@ -746,7 +769,16 @@
                 period,
                 bareme,
                 indemnites: [...indemnites],
-                salaireBase: salaireBaseMensuel
+                salaireBase: salaireBaseMensuel,
+                // NOUVEAUX CHAMPS
+                employe: {
+                    nom: $("#nomEmploye").value.trim() || 'Non spécifié',
+                    poste: $("#posteEmploye").value.trim() || 'Non spécifié',
+                },
+                employeur: {
+                    nom: $("#nomEntreprise").value.trim() || 'Non spécifié',
+                    ninea: $("#nineaEntreprise").value.trim() || 'Non spécifié',
+                }
             };
 
             // Mise à jour de l'interface
@@ -769,10 +801,6 @@
                 totalCotisations,
                 baseSociale,
                 abattement,
-                baseIRMensuelle,
-                baseIRAnnuelle,
-                irTheorique,
-                trimf,
                 irRetenu,
                 irMensuel,
                 netMensuel,
@@ -785,11 +813,8 @@
 
             // Mise à jour des cartes résumé
             $("#netMensuel").textContent = fmt(netMensuel);
-
-            // Impôt total = Cotisations + IR (en valeur absolue)
             const impotTotalAnnuel = (totalCotisations * 12) + irRetenu;
             $("#impotTotal").textContent = fmt(impotTotalAnnuel);
-
             const tauxEffectif = (impotTotalAnnuel / (brutMensuel * 12)) * 100;
             $("#tauxEffectif").textContent = tauxEffectif.toFixed(1) + "%";
 
@@ -815,9 +840,9 @@
                 ...(cadre === "cadre" ? [["📉 IPRES Compl. (2.4%)", -cotisationComp, -cotisationComp * 12, "money negative"]] : []),
                 ["📊 Base après cotisations", baseSociale, baseSociale * 12, "money"],
                 ["🎯 Abattement 30% (max 900K)", -abattement, -abattement * 12, "money negative"],
-                ["📝 Base imposable IR", baseIRMensuelle, baseIRAnnuelle, "money"],
+                ["📝 Base imposable IR", baseSociale - abattement, (baseSociale - abattement) * 12, "money"], // Correction de la base IR
                 ["---", null, null, "separator"],
-                ["🧮 IR théorique", -irTheorique / 12, -irTheorique, "money negative"],
+                ["🧮 IR théorique", -results.irTheorique / 12, -results.irTheorique, "money negative"],
                 ...(trimfActive ? [
                     ["🛡️ TRIMF (plancher)", -trimf / 12, -trimf, "money negative"],
                     ["🎯 IR retenu", -irMensuel, -irRetenu, "money negative highlight"]
@@ -841,12 +866,9 @@
                 tbl.appendChild(tr);
             });
 
-            // Afficher le bouton PDF
             $("#pdfSection").classList.remove("hidden");
-
-            // Message de statut
             $("#status").className = "status-message status-success";
-            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""}`;
+            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024 (IPRES/IR Corrigés)`;
         } catch (error) {
             console.error("Erreur dans updateUI:", error);
             $("#status").className = "status-message status-warning";
@@ -862,36 +884,41 @@
 
         try {
             const doc = new jsPDF();
+            const { employe, employeur, netMensuel, netAnnuel, totalCotisations, irRetenu, brutMensuel } = dernierCalcul;
 
             // En-tête
             doc.setFillColor(99, 102, 241);
             doc.rect(0, 0, 210, 40, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(20);
-            doc.text("SIMULATEUR DE SALAIRE SÉNÉGAL", 105, 15, { align: 'center' });
+            doc.text("RAPPORT DE SIMULATION SALARIALE (SÉNÉGAL)", 105, 15, { align: 'center' });
             doc.setFontSize(12);
-            doc.text("Rapport de calcul détaillé - " + new Date().toLocaleDateString('fr-FR'), 105, 25, { align: 'center' });
+            doc.text("Calculs basés sur les barèmes fiscaux 2024", 105, 25, { align: 'center' });
 
-            // Informations générales
+            // --- Section 1: Identification (Employeur/Employé) ---
+            let y = 50;
             doc.setTextColor(0, 0, 0);
-            doc.setFontSize(16);
-            doc.text("INFORMATIONS GÉNÉRALES", 20, 55);
-
-            doc.setFontSize(10);
-            let y = 65;
-            doc.text(`Statut: ${dernierCalcul.cadre === "cadre" ? "Cadre" : "Non-cadre"}`, 20, y);
-            doc.text(`Période: ${dernierCalcul.period === "annual" ? "Annuelle" : "Mensuelle"}`, 100, y);
-            y += 8;
-            doc.text(`Parts familiales IR: ${$("#partsIR").value}`, 20, y);
-            doc.text(`TRIMF: ${dernierCalcul.trimfActive ? "Activée" : "Désactivée"}`, 100, y);
-
-            // Composition du salaire
-            y += 20;
-            doc.setFontSize(16);
-            doc.text("COMPOSITION DU SALAIRE", 20, y);
+            doc.setFontSize(14);
+            doc.text("INFORMATIONS SUR LE CONTEXTE", 20, y);
 
             doc.setFontSize(10);
             y += 10;
+            doc.text(`Employé: ${employe.nom}`, 20, y);
+            doc.text(`Poste: ${employe.poste}`, 110, y);
+            y += 6;
+            doc.text(`Employeur: ${employeur.nom}`, 20, y);
+            doc.text(`NINEA/Adresse: ${employeur.ninea}`, 110, y);
+            y += 8;
+            doc.text(`Statut: ${dernierCalcul.cadre === "cadre" ? "Cadre" : "Non-cadre"}`, 20, y);
+            doc.text(`Parts familiales IR: ${$("#partsIR").value}`, 110, y);
+
+            // --- Section 2: Composition du Salaire ---
+            y += 15;
+            doc.setFontSize(14);
+            doc.text("COMPOSITION DU SALAIRE", 20, y);
+
+            doc.setFontSize(10);
+            y += 5;
             const tableColumnSalaire = ["Élément", "Mensuel", "Annuel"];
             const tableRowsSalaire = [
                 ["Salaire de base", fmt(dernierCalcul.salaireBase) + " F CFA", fmt(dernierCalcul.salaireBase * 12) + " F CFA"],
@@ -906,25 +933,29 @@
             doc.autoTable({
                 head: [tableColumnSalaire],
                 body: tableRowsSalaire,
-                startY: y,
+                startY: y + 5,
                 theme: 'grid',
                 styles: { fontSize: 10, cellPadding: 3 },
                 headStyles: { fillColor: [99, 102, 241] },
                 margin: { left: 20, right: 20 }
             });
 
-            // Résultats détaillés
+            // --- Section 3: Déductions et Net ---
             const finalYSalaire = doc.lastAutoTable.finalY + 15;
-            doc.setFontSize(16);
-            doc.text("RÉSULTATS DÉTAILLÉS", 20, finalYSalaire);
+            doc.setFontSize(14);
+            doc.text("DÉTAIL DES DÉDUCTIONS ET RÉSULTAT NET", 20, finalYSalaire);
 
-            // Tableau des résultats
-            const tableColumn = ["Élément", "Mensuel", "Annuel"];
+            const tableColumn = ["Rubrique", "Mensuel", "Annuel"];
             const tableRows = [
-                ["Cotisations IPRES", "-" + fmt(dernierCalcul.totalCotisations) + " F CFA", "-" + fmt(dernierCalcul.totalCotisations * 12) + " F CFA"],
+                ["Cotisations IPRES", "-" + fmt(totalCotisations) + " F CFA", "-" + fmt(totalCotisations * 12) + " F CFA"],
+                ["Abattement IR (30% / max 900K)", "-" + fmt(dernierCalcul.abattement) + " F CFA", "-" + fmt(dernierCalcul.abattement * 12) + " F CFA"],
                 ["Base imposable IR", fmt(dernierCalcul.baseIRMensuelle) + " F CFA", fmt(dernierCalcul.baseIRAnnuelle) + " F CFA"],
-                ["IR retenu", "-" + fmt(dernierCalcul.irMensuel) + " F CFA", "-" + fmt(dernierCalcul.irRetenu) + " F CFA"],
-                ["SALAIRE NET", fmt(dernierCalcul.netMensuel) + " F CFA", fmt(dernierCalcul.netAnnuel) + " F CFA"]
+                ["IR retenu", "-" + fmt(irRetenu / 12) + " F CFA", "-" + fmt(irRetenu) + " F CFA"],
+                // Ligne finale en gras
+                [{ content: "SALAIRE NET À PAYER", styles: { fontStyle: 'bold', fillColor: [200, 220, 255] } },
+                 { content: fmt(netMensuel) + " F CFA", styles: { fontStyle: 'bold', fillColor: [200, 255, 200] } },
+                 { content: fmt(netAnnuel) + " F CFA", styles: { fontStyle: 'bold', fillColor: [200, 255, 200] } }
+                ]
             ];
 
             doc.autoTable({
@@ -937,32 +968,32 @@
                 margin: { left: 20, right: 20 }
             });
 
-            // Résumé final
+            // --- Section 4: Résumé Final ---
             const finalY = doc.lastAutoTable.finalY + 15;
-            doc.setFontSize(14);
-            doc.setTextColor(99, 102, 241);
-            doc.text("RÉSUMÉ", 20, finalY);
+            doc.setFontSize(12);
+            doc.setTextColor(79, 70, 229); // Couleur primaire pour le résumé
+            doc.text("RÉSUMÉ FINAL", 20, finalY);
 
             doc.setFontSize(10);
             doc.setTextColor(0, 0, 0);
-            doc.text(`Salaire net mensuel: ${fmt(dernierCalcul.netMensuel)} F CFA`, 20, finalY + 10);
-            doc.text(`Salaire net annuel: ${fmt(dernierCalcul.netAnnuel)} F CFA`, 20, finalY + 18);
+            const impotTotalAnnuel = (totalCotisations * 12) + irRetenu;
+            const tauxEffectif = (impotTotalAnnuel / (brutMensuel * 12)) * 100;
 
-            const impotTotalAnnuel = (dernierCalcul.totalCotisations * 12) + dernierCalcul.irRetenu;
-            const tauxEffectif = (impotTotalAnnuel / (dernierCalcul.brutMensuel * 12)) * 100;
-            doc.text(`Taux d'imposition effectif: ${tauxEffectif.toFixed(1)}%`, 20, finalY + 26);
-            doc.text(`Impôt total (cotisations + IR): ${fmt(impotTotalAnnuel)} F CFA`, 20, finalY + 34);
+            doc.text(`Taux d'imposition effectif (IR + Cotisations): ${tauxEffectif.toFixed(1)}%`, 20, finalY + 8);
+            doc.text(`Impôt total annuel: ${fmt(impotTotalAnnuel)} F CFA`, 20, finalY + 16);
+            doc.text(`Total Brut Annuel: ${fmt(brutMensuel * 12)} F CFA`, 110, finalY + 8);
+            doc.text(`Total Net Annuel: ${fmt(netAnnuel)} F CFA`, 110, finalY + 16);
+
 
             // Pied de page
             doc.setFontSize(8);
             doc.setTextColor(128, 128, 128);
-            doc.text("Ce document a été généré automatiquement par le simulateur de salaire Sénégal",
+            doc.text("Ce document a été généré automatiquement par le simulateur de salaire Sénégal. Les calculs sont basés sur les législations fiscales et sociales connues en 2024.",
                 105, 290, { align: 'center' });
 
             // Sauvegarde du PDF
-            doc.save(`simulateur-salaire-${new Date().toISOString().split('T')[0]}.pdf`);
+            doc.save(`rapport-salaire-${employe.nom.replace(/\s/g, '-') || 'simule'}-${new Date().toISOString().split('T')[0]}.pdf`);
 
-            // Message de confirmation
             $("#status").className = "status-message status-success";
             $("#status").innerHTML = "✅ PDF généré avec succès !";
         } catch (error) {
@@ -984,6 +1015,13 @@
         $("#salaireBase").addEventListener('input', calculerTotalBrut);
 
         $("#resetBtn").addEventListener('click', () => {
+            // Réinitialisation des champs d'identification
+            $("#nomEmploye").value = "";
+            $("#posteEmploye").value = "";
+            $("#nomEntreprise").value = "";
+            $("#nineaEntreprise").value = "";
+
+            // Réinitialisation des champs de calcul
             $("#salaireBase").value = "";
             $("#partsIR").value = "1";
             $("#trimfActive").value = "no";
@@ -1002,10 +1040,11 @@
             dernierCalcul = null;
         });
 
-        // Calcul automatique lors de la modification
-        document.querySelectorAll("#salaireBase, #partsIR, #trimfActive, #trimfParPartAn, #partsTRIMF, #cadre, #period").forEach(element => {
+        // Calcul automatique lors de la modification des champs importants
+        document.querySelectorAll("#salaireBase, #partsIR, #trimfActive, #trimfParPartAn, #partsTRIMF, #cadre, #period, #nomEmploye, #posteEmploye, #nomEntreprise, #nineaEntreprise").forEach(element => {
             element.addEventListener("input", () => {
                 if (element.id === "salaireBase") calculerTotalBrut();
+                // Ne recalculer que si le salaire brut est valide
                 if ($("#salaireBase").value && parseFloat($("#salaireBase").value) > 0) {
                     clearTimeout(window.calcTimeout);
                     window.calcTimeout = setTimeout(calc, 1000);
@@ -1018,6 +1057,8 @@
         setTimeout(() => {
             $("#salaireBase").value = "400000";
             $("#partsIR").value = "1.5";
+            $("#nomEmploye").value = "Diop Oumar";
+            $("#nomEntreprise").value = "SeneTech Solutions";
             calc(); // Calculer automatiquement
         }, 500);
     });
