@@ -832,7 +832,7 @@
 
             // Message de statut
             $("#status").className = "status-message status-success";
-            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024 (IPRES/IR Corrigés)`;
+            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""}`;
         } catch (error) {
             console.error("Erreur dans updateUI:", error);
             $("#status").className = "status-message status-warning";
