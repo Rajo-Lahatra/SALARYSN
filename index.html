@@ -78,7 +78,7 @@
             border: 1px solid var(--border);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 20px; /* Ajout d'une marge entre les cartes dans la même colonne */
+            margin-bottom: 20px;
         }
 
         .card:hover {
@@ -94,11 +94,10 @@
             color: var(--primary);
         }
 
-        /* Modifier l'icône pour les cartes d'identification */
         #identificationCard h3::before {
             content: "👤";
         }
-        
+
         .card h3::before {
             content: "📊";
         }
@@ -185,19 +184,19 @@
 
         .button-group {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
         .button-group button {
             flex: 1;
-            min-width: 120px;
+            min-width: 150px;
         }
 
         .money {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--success);
+            font-size: 1.1rem;
         }
 
         .money.negative {
@@ -205,19 +204,17 @@
         }
 
         .money::before {
-            content: "F CFA ";
-            font-size: 0.9em;
-            opacity: 0.8;
+            content: "";
         }
 
         .results-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .results-table th, .results-table td {
-            padding: 12px 10px;
+            padding: 12px;
             text-align: right;
             border-bottom: 1px solid var(--border);
         }
@@ -225,53 +222,51 @@
         .results-table th:first-child, .results-table td:first-child {
             text-align: left;
         }
-        
+
         .results-table .money {
-            font-size: 13px; /* Taille réduite pour les grands nombres */
-            white-space: nowrap; 
+            font-variant-numeric: tabular-nums;
         }
 
         .results-table tr:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background-color: rgba(99, 102, 241, 0.1);
         }
 
         .results-table th {
-            color: var(--text-muted);
+            background-color: rgba(99, 102, 241, 0.15);
             font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: var(--primary);
         }
 
         .highlight {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-            border-left: 4px solid var(--success);
+            background-color: rgba(16, 185, 129, 0.2);
+            font-weight: 600;
         }
 
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 25px;
+            margin: 20px 0;
         }
 
         @media (max-width: 500px) {
-             .summary-cards {
-                 grid-template-columns: 1fr;
-             }
+            .summary-cards {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .summary-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            padding: 15px;
             border-radius: 12px;
-            text-align: center;
             border: 1px solid var(--border);
+            text-align: center;
         }
 
         .summary-card .value {
             font-size: 1.5rem;
             font-weight: 700;
+            color: var(--primary);
             margin: 10px 0;
         }
 
@@ -281,83 +276,81 @@
         }
 
         .progress-bar {
+            width: 100%;
             height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            margin: 20px 0;
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
             overflow: hidden;
+            margin-top: 8px;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            transition: width 0.3s ease;
         }
 
         .status-message {
             padding: 15px;
             border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-            font-weight: 600;
+            margin: 15px 0;
+            font-weight: 500;
         }
 
         .status-success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid var(--success);
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .status-info {
-            background: rgba(99, 102, 241, 0.2);
-            border: 1px solid var(--primary);
+            background: rgba(99, 102, 241, 0.15);
             color: var(--primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
         .status-warning {
-            background: rgba(245, 158, 11, 0.2);
-            border: 1px solid var(--warning);
+            background: rgba(245, 158, 11, 0.15);
             color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
         .emoji {
-            font-size: 1.2em;
+            font-size: 1.2rem;
             margin-right: 5px;
         }
 
         .tooltip {
             position: relative;
-            display: inline-block;
-            margin-left: 5px;
-            cursor: help;
+            border-bottom: 1px dotted var(--primary);
         }
 
         .tooltip::after {
-            content: "ℹ️";
-            font-size: 0.8em;
-            opacity: 0.7;
-        }
-
-        .tooltip:hover::before {
             content: attr(data-tooltip);
             position: absolute;
-            bottom: 100%;
+            bottom: 125%;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
+            background: var(--bg-dark);
+            color: var(--text-light);
             padding: 8px 12px;
             border-radius: 6px;
             font-size: 12px;
             white-space: nowrap;
-            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
         }
 
         .pdf-section {
-            margin-top: 20px;
+            margin-top: 30px;
             padding-top: 20px;
-            border-top: 1px solid var(--border);
+            border-top: 2px solid var(--border);
         }
 
         .hidden {
@@ -365,49 +358,52 @@
         }
 
         .indemnites-section {
-            margin-top: 15px;
+            margin-top: 20px;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(99, 102, 241, 0.05);
             border-radius: 10px;
             border: 1px solid var(--border);
         }
 
         .indemnite-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
             gap: 10px;
             margin-bottom: 10px;
-            align-items: center;
+            align-items: end;
         }
 
         .indemnite-item select, .indemnite-item input {
-            flex: 1;
+            margin-bottom: 0;
         }
 
         .remove-indemnite {
+            padding: 8px 12px;
             background: var(--danger);
             color: white;
             border: none;
             border-radius: 6px;
-            padding: 8px 12px;
             cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-indemnite:hover {
+            background: #dc2626;
         }
 
         .salaire-composition {
-            margin-bottom: 15px;
+            margin-top: 15px;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(16, 185, 129, 0.05);
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border-left: 4px solid var(--success);
         }
 
         .total-brut {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(99, 102, 241, 0.1);
-            border-radius: 8px;
-            border: 1px solid var(--primary);
-            font-weight: 600;
-            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--success);
+            text-align: right;
         }
     </style>
 </head>
@@ -421,152 +417,114 @@
     <div class="grid">
         <div>
             <div class="card" id="identificationCard">
-                <h3>Identification (Optionnel)</h3>
-                
-                <h4 style="margin-top: 15px; color: var(--success);">Employé(e)</h4>
+                <h3>Informations Personnelles</h3>
                 <div class="input-group">
-                    <label>Nom et Prénom</label>
-                    <input id="nomEmploye" type="text" placeholder="Nom complet de l'employé(e)">
+                    <label for="nomEmploye">Nom de l'employé</label>
+                    <input type="text" id="nomEmploye" placeholder="Ex: Jean DUPONT">
                 </div>
                 <div class="input-group">
-                    <label>Poste / Fonction</label>
-                    <input id="posteEmploye" type="text" placeholder="ex : Directeur Commercial">
-                </div>
-
-                <h4 style="margin-top: 25px; color: var(--warning);">Employeur</h4>
-                <div class="input-group">
-                    <label>Nom de l'entreprise</label>
-                    <input id="nomEntreprise" type="text" placeholder="ex : SeneTech SARL">
-                </div>
-                <div class="input-group">
-                    <label>NINEA / Adresse</label>
-                    <input id="nineaEntreprise" type="text" placeholder="NINEA ou adresse">
+                    <label for="posteEmploye">Poste/Fonction</label>
+                    <input type="text" id="posteEmploye" placeholder="Ex: Ingénieur">
                 </div>
             </div>
-            
-            <div class="card">
-                <h3>Paramètres de calcul</h3>
 
+            <div class="card">
+                <h3>Paramètres de Calcul</h3>
                 <div class="input-group">
-                    <label>Période de calcul</label>
+                    <label for="salaireBase">Salaire de base (FCFA)</label>
+                    <input type="number" id="salaireBase" value="500000" min="0" step="1000">
+                </div>
+                <div class="input-group">
+                    <label for="partsIR">Nombre de parts IR</label>
+                    <input type="number" id="partsIR" value="1" min="1" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label for="period">Période de calcul</label>
                     <select id="period">
-                        <option value="monthly">📅 Mensuel</option>
-                        <option value="annual">📊 Annuel</option>
+                        <option value="mensuel">Mensuel</option>
+                        <option value="annuel">Annuel</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="cadre">Statut</label>
+                    <select id="cadre">
+                        <option value="nc">Non-Cadre</option>
+                        <option value="cadre">Cadre</option>
                     </select>
                 </div>
 
-                <div class="input-group">
-                    <label>Statut professionnel</label>
-                    <select id="cadre">
-                        <option value="non">👨‍💼 Non-cadre</option>
-                        <option value="cadre">👨‍💼 Cadre</option>
-                    </select>
+                <div class="card">
+                    <h3>Indemnités</h3>
+                    <div id="indemnites-container"></div>
+                    <button class="btn-secondary" id="ajouterIndemnite">+ Ajouter une indemnité</button>
                 </div>
 
                 <div class="salaire-composition">
-                    <h4 style="margin-top: 0; color: var(--primary);">Composition du salaire</h4>
-
-                    <div class="input-group">
-                        <label>Salaire de base <span class="tooltip" data-tooltip="Salaire fixe avant additions"></span></label>
-                        <input id="salaireBase" type="number" placeholder="ex : 400 000">
-                    </div>
-                    <div class="indemnites-section">
-                        <label>Éléments de rémunération additionnels</label>
-                        <div id="indemnites-container">
-                            </div>
-                        <button type="button" id="ajouterIndemnite" class="btn-warning" style="margin-top: 10px;">➕ Ajouter un élément</button>
-                    </div>
+                    <label>Total Salaire Brut</label>
                     <div class="total-brut">
-                        <div>Salaire brut total: <span id="totalBrutAffichage" class="money">0</span></div>
+                        <span id="totalBrutAffichage">0</span> FCFA
                     </div>
                 </div>
+            </div>
 
+            <div class="card">
+                <h3>Options TRIMF</h3>
                 <div class="input-group">
-                    <label>Parts familiales (IR) <span class="tooltip" data-tooltip="1 part pour célibataire, +0.5 par enfant"></span></label>
-                    <input id="partsIR" type="number" step="0.5" value="1" min="1">
+                    <label>
+                        <input type="checkbox" id="trimfActive"> Activer TRIMF
+                    </label>
                 </div>
-                <div class="input-group">
-                    <label>Activer la TRIMF <span class="tooltip" data-tooltip="Taxe minimum alternative à l'IR"></span></label>
-                    <select id="trimfActive">
-                        <option value="no">❌ Désactivée</option>
-                        <option value="yes">✅ Activée</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>TRIMF annuel par part</label>
-                    <input id="trimfParPartAn" type="number" value="60000">
-                </div>
-                <div class="input-group">
-                    <label>Nombre de parts TRIMF</label>
-                    <input id="partsTRIMF" type="number" step="0.5" value="1" min="1">
-                </div>
-                <div class="button-group">
-                    <button id="calcBtn" class="btn-primary">🚀 Calculer mon salaire</button>
-                    <button id="resetBtn" class="btn-secondary">🔄 Réinitialiser</button>
+                <div class="input-group" id="trimfOptions" style="display:none;">
+                    <label for="trimfParPartAn">TRIMF par part/an (FCFA)</label>
+                    <input type="number" id="trimfParPartAn" value="20000" min="0">
+                    <label for="partsTRIMF" style="margin-top: 10px;">Nombre de parts TRIMF</label>
+                    <input type="number" id="partsTRIMF" value="1" min="1" step="0.5">
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h3>Résultats détaillés</h3>
-
-            <div id="summaryCards" class="summary-cards">
-                <div class="summary-card">
-                    <div class="label">Salaire Net Mensuel</div>
-                    <div id="netMensuel" class="value money">-</div>
-                    <div class="label">Après impôts</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Impôt Total annuel</div>
-                    <div id="impotTotal" class="value money negative">-</div>
-                    <div class="label">IR + Cotisations</div>
-                </div>
-                <div class="summary-card">
-                    <div class="label">Taux Effectif</div>
-                    <div id="tauxEffectif" class="value">-</div>
-                    <div class="label">Imposition réelle</div>
-                </div>
+            <h3>Résultats du Calcul</h3>
+            <div id="status" class="status-message status-info">
+                📊 Entrez vos données et cliquez sur "Calculer"
             </div>
-
-            <div class="progress-bar">
-                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
-            </div>
-
-            <table class="results-table">
+            <table class="results-table" id="resultsTable">
                 <thead>
-                <tr>
-                    <th>Élément</th>
-                    <th>Mensuel</th>
-                    <th>Annuel</th>
-                </tr>
+                    <tr>
+                        <th>Élément</th>
+                        <th>Montant (FCFA)</th>
+                    </tr>
                 </thead>
-                <tbody id="detail"></tbody>
+                <tbody id="resultsBody">
+                    <tr>
+                        <td colspan="2" style="text-align:center; color: var(--text-muted);">Aucun calcul effectué</td>
+                    </tr>
+                </tbody>
             </table>
 
-            <div id="pdfSection" class="pdf-section hidden">
-                <div class="button-group">
-                    <button id="pdfBtn" class="btn-success">📄 Générer le PDF</button>
-                </div>
-            </div>
-            <div id="status" class="status-message status-info">
-                ⏳ En attente de calcul...
+            <div class="summary-cards" id="summaryCards"></div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="calcBtn">🧮 Calculer</button>
+                <button class="btn-warning" id="pdfBtn">📄 Générer PDF</button>
+                <button class="btn-secondary" id="resetBtn">🔄 Réinitialiser</button>
             </div>
         </div>
     </div>
 </div>
+
 <script>
-    // Variables globales pour stocker les résultats
+    // Variables globales
     let dernierCalcul = null;
+    let trimfActive = false;
     const { jsPDF } = window.jspdf;
 
     const $ = (s) => document.querySelector(s);
-    // Fonction de formatage avec espace comme séparateur de milliers
     const fmt = (n) => {
         if (!isFinite(n)) return "0";
         return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     };
 
-    // Liste des types d'indemnités
     const typesIndemnites = [
         { value: "prime_anciennete", label: "Prime d'ancienneté" },
         { value: "prime_rendement", label: "Prime de rendement" },
@@ -580,15 +538,14 @@
         { value: "indemnite_deplacement", label: "Indemnité de déplacement" },
         { value: "indemnite_risque", label: "Indemnité de risque" },
         { value: "prime_panier", label: "Prime panier" },
-        { value: "autre", label: "Autre indemnité" }];
+        { value: "autre", label: "Autre indemnité" }
+    ];
 
-    // PARAMÈTRES IPRES 2024 (CORRIGÉS)
     const IPRES_GEN_PLAF = 432000;
-    const IPRES_COMP_PLAF = 1296000; 
-    const IPRES_GEN_TAUX = 0.056; 
-    const IPRES_COMP_TAUX = 0.024; 
+    const IPRES_COMP_PLAF = 1296000;
+    const IPRES_GEN_TAUX = 0.056;
+    const IPRES_COMP_TAUX = 0.024;
 
-    // Gestion des indemnités
     let indemnites = [];
 
     function ajouterIndemnite() {
@@ -608,40 +565,33 @@
         const container = $("#indemnites-container");
         container.innerHTML = '';
 
-        indemnites.forEach((indemnite, index) => {
+        indemnites.forEach((indemnite) => {
             const div = document.createElement('div');
             div.className = 'indemnite-item';
             div.innerHTML = `
-                <select data-id="${indemnite.id}" class="type-indemnite">
-                    ${typesIndemnites.map(type =>
-                `<option value="${type.value}" ${indemnite.type === type.value ? 'selected' : ''}>${type.label}</option>`
-            ).join('')}
+                <select class="type-indemnite" data-id="${indemnite.id}">
+                    ${typesIndemnites.map(t => `<option value="${t.value}" ${t.value === indemnite.type ? 'selected' : ''}>${t.label}</option>`).join('')}
                 </select>
-                <input type="number" data-id="${indemnite.id}" class="montant-indemnite" placeholder="Montant" value="${indemnite.montant}">
-                <button type="button" class="remove-indemnite" data-id="${indemnite.id}">🗑️</button>
+                <input type="number" class="montant-indemnite" data-id="${indemnite.id}" value="${indemnite.montant}" min="0" step="1000" placeholder="Montant">
+                <button class="remove-indemnite" data-id="${indemnite.id}">✕ Supprimer</button>
             `;
             container.appendChild(div);
         });
 
-        // Ajouter les écouteurs d'événements
         container.querySelectorAll('.type-indemnite').forEach(select => {
             select.addEventListener('change', (e) => {
                 const id = parseInt(e.target.dataset.id);
-                const indemnite = indemnites.find(ind => ind.id === id);
-                if (indemnite) {
-                    indemnite.type = e.target.value;
-                }
+                const ind = indemnites.find(i => i.id === id);
+                if (ind) ind.type = e.target.value;
             });
         });
 
         container.querySelectorAll('.montant-indemnite').forEach(input => {
             input.addEventListener('input', (e) => {
                 const id = parseInt(e.target.dataset.id);
-                const indemnite = indemnites.find(ind => ind.id === id);
-                if (indemnite) {
-                    indemnite.montant = parseFloat(e.target.value) || 0;
-                    calculerTotalBrut();
-                }
+                const ind = indemnites.find(i => i.id === id);
+                if (ind) ind.montant = parseFloat(e.target.value) || 0;
+                calculerTotalBrut();
             });
         });
 
@@ -657,7 +607,6 @@
         const salaireBase = parseFloat($("#salaireBase").value) || 0;
         const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
         const totalBrut = salaireBase + totalIndemnites;
-
         $("#totalBrutAffichage").textContent = fmt(totalBrut);
         return totalBrut;
     }
@@ -667,12 +616,10 @@
         let impot = 0, precedent = 0;
 
         for (const tranche of bareme) {
-            if (quotient > precedent) {
-                const limite = Math.min(quotient, tranche.seuil);
-                impot += (limite - precedent) * tranche.taux;
-                precedent = limite;
-                if (quotient <= tranche.seuil) break;
-            }
+            if (quotient <= tranche.min) break;
+            const imposable = Math.min(quotient, tranche.max) - precedent;
+            impot += imposable * tranche.taux;
+            precedent = Math.min(quotient, tranche.max);
         }
 
         return impot * parts;
@@ -680,387 +627,200 @@
 
     function calc() {
         try {
-            // Barème IR Sénégal 2024 (avec tranche 43% pour les très hauts revenus)
-            const bareme = [
-                {seuil: 630000, taux: 0.00},
-                {seuil: 1500000, taux: 0.20},
-                {seuil: 4000000, taux: 0.30},
-                {seuil: 8000000, taux: 0.35},
-                {seuil: 13500000, taux: 0.38},
-                {seuil: 50000000, taux: 0.40}, 
-                {seuil: Infinity, taux: 0.43} 
-            ];
-
             const salaireBase = parseFloat($("#salaireBase").value) || 0;
-            const totalBrut = calculerTotalBrut();
-
-            if (totalBrut <= 0) {
-                $("#status").className = "status-message status-warning";
-                $("#status").innerHTML = "⚠️ Veuillez saisir un salaire brut positif";
-                $("#pdfSection").classList.add("hidden");
-                return;
-            }
-
+            const parts = parseFloat($("#partsIR").value) || 1;
+            trimfActive = $("#trimfActive").checked;
             const cadre = $("#cadre").value;
-            const partsIR = parseFloat($("#partsIR").value) || 1;
-            const trimfActive = $("#trimfActive").value === "yes";
-            const trimfParPart = parseFloat($("#trimfParPartAn").value) || 0;
-            const trimfParts = parseFloat($("#partsTRIMF").value) || 1;
-
             const period = $("#period").value;
 
-            // Conversion en mensuel si période annuelle
-            let brutMensuel = period === "annual" ? totalBrut / 12 : totalBrut;
-            let salaireBaseMensuel = period === "annual" ? salaireBase / 12 : salaireBase;
-            let totalIndemnitesMensuel = indemnites.reduce((sum, ind) => {
-                const montant = period === "annual" ? ind.montant / 12 : ind.montant;
-                return sum + (montant || 0);
-            }, 0);
+            if (salaireBase <= 0) throw new Error("Salaire de base doit être > 0");
 
-            // Calcul des cotisations IPRES 
-            const cotisationGen = Math.min(brutMensuel, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
-            let cotisationComp = 0;
+            const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
+            const salaireBrut = salaireBase + totalIndemnites;
 
-            if (cadre === "cadre") {
-                const baseComplementaire = Math.max(brutMensuel - IPRES_GEN_PLAF, 0);
-                cotisationComp = Math.min(baseComplementaire, IPRES_COMP_PLAF - IPRES_GEN_PLAF) * IPRES_COMP_TAUX;
+            const cotisationIpresGen = Math.min(salaireBrut, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
+            const baseCotisationIpresComp = Math.max(0, salaireBrut - IPRES_GEN_PLAF);
+            const cotisationIpresComp = Math.min(baseCotisationIpresComp, IPRES_COMP_PLAF) * IPRES_COMP_TAUX;
+            const totalIpres = cotisationIpresGen + cotisationIpresComp;
+
+            let ir = 0;
+            const bareme = [
+                { min: 0, max: 153000, taux: 0 },
+                { min: 153000, max: 500000, taux: 0.2 },
+                { min: 500000, max: 1000000, taux: 0.3 },
+                { min: 1000000, max: Infinity, taux: 0.38 }
+            ];
+            ir = impotProgressif(salaireBrut, parts, bareme);
+
+            let trimf = 0;
+            if (trimfActive) {
+                const partsTrimf = parseFloat($("#partsTRIMF").value) || 1;
+                const trimfParPartAn = parseFloat($("#trimfParPartAn").value) || 20000;
+                trimf = (period === "mensuel") ? (trimfParPartAn * partsTrimf / 12) : (trimfParPartAn * partsTrimf);
             }
 
-            const totalCotisations = cotisationGen + cotisationComp;
+            const salaireNet = salaireBrut - totalIpres - ir - trimf;
 
-            // Base sociale et abattement
-            const baseSociale = brutMensuel - totalCotisations;
-            const abattement = Math.min(baseSociale * 0.3, 900000 / 12);
-            const baseIRMensuelle = baseSociale - abattement;
-            const baseIRAnnuelle = baseIRMensuelle * 12;
-
-            // Calcul IR théorique
-            const irTheorique = impotProgressif(baseIRAnnuelle, partsIR, bareme);
-
-            // Application TRIMF si activée
-            const trimf = trimfActive ? trimfParPart * trimfParts : 0;
-            const irRetenu = Math.max(irTheorique, trimf);
-            const irMensuel = irRetenu / 12;
-
-            // Salaire net
-            const netMensuel = brutMensuel - totalCotisations - irMensuel;
-            const netAnnuel = netMensuel * 12;
-
-            // Stockage des résultats pour le PDF + Infos Employé/Employeur
             dernierCalcul = {
-                brutMensuel,
-                totalIndemnitesMensuel,
-                cotisationGen,
-                cotisationComp,
-                totalCotisations,
-                baseSociale,
-                abattement,
-                baseIRMensuelle,
-                baseIRAnnuelle,
-                irTheorique,
+                salaireBase,
+                salaireBrut,
+                totalIndemnites,
+                cotisationIpresGen,
+                cotisationIpresComp,
+                totalIpres,
+                ir,
                 trimf,
-                irRetenu,
-                irMensuel,
-                netMensuel,
-                netAnnuel,
-                trimfActive,
+                salaireNet,
+                parts,
                 cadre,
-                partsIR,
                 period,
-                bareme,
-                indemnites: [...indemnites],
-                salaireBase: salaireBaseMensuel,
-                // NOUVEAUX CHAMPS
-                employe: {
-                    nom: $("#nomEmploye").value.trim() || 'Non spécifié',
-                    poste: $("#posteEmploye").value.trim() || 'Non spécifié',
-                },
-                employeur: {
-                    nom: $("#nomEntreprise").value.trim() || 'Non spécifié',
-                    ninea: $("#nineaEntreprise").value.trim() || 'Non spécifié',
-                }
+                indemnites: [...indemnites]
             };
 
-            // Mise à jour de l'interface
             updateUI(dernierCalcul);
-
         } catch (error) {
-            console.error("Erreur de calcul:", error);
+            $("#status").innerHTML = `❌ Erreur : ${error.message}`;
             $("#status").className = "status-message status-warning";
-            $("#status").innerHTML = "❌ Erreur lors du calcul - vérifiez les paramètres";
-            $("#pdfSection").classList.add("hidden");
         }
     }
 
     function updateUI(results) {
-        try {
-            const {
-                brutMensuel,
-                cotisationGen,
-                cotisationComp,
-                totalCotisations,
-                baseSociale,
-                abattement,
-                irRetenu,
-                irMensuel,
-                netMensuel,
-                netAnnuel,
-                trimfActive,
-                cadre,
-                indemnites,
-                salaireBase
-            } = results;
+        const tbody = $("#resultsBody");
+        tbody.innerHTML = `
+            <tr><td>Salaire de base</td><td class="money">${fmt(results.salaireBase)}</td></tr>
+            <tr><td>Indemnités</td><td class="money">${fmt(results.totalIndemnites)}</td></tr>
+            <tr class="highlight"><td>Salaire Brut</td><td class="money">${fmt(results.salaireBrut)}</td></tr>
+            <tr><td>Cotisation IPRES Générale</td><td class="money negative">${fmt(results.cotisationIpresGen)}</td></tr>
+            <tr><td>Cotisation IPRES Complémentaire</td><td class="money negative">${fmt(results.cotisationIpresComp)}</td></tr>
+            <tr><td>Total IPRES</td><td class="money negative">${fmt(results.totalIpres)}</td></tr>
+            <tr><td>Impôt sur le Revenu</td><td class="money negative">${fmt(results.ir)}</td></tr>
+            ${results.trimf > 0 ? `<tr><td>TRIMF</td><td class="money negative">${fmt(results.trimf)}</td></tr>` : ''}
+            <tr class="highlight"><td>Salaire NET</td><td class="money">${fmt(results.salaireNet)}</td></tr>
+        `;
 
-            // Mise à jour des cartes résumé
-            $("#netMensuel").textContent = fmt(netMensuel);
-            const impotTotalAnnuel = (totalCotisations * 12) + irRetenu;
-            $("#impotTotal").textContent = fmt(impotTotalAnnuel);
-            const tauxEffectif = (impotTotalAnnuel / (brutMensuel * 12)) * 100;
-            $("#tauxEffectif").textContent = tauxEffectif.toFixed(1) + "%";
+        const summaryCards = $("#summaryCards");
+        summaryCards.innerHTML = `
+            <div class="summary-card">
+                <div class="label">Salaire Brut</div>
+                <div class="value">${fmt(results.salaireBrut)}</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Retenues</div>
+                <div class="value negative" style="color: var(--danger)">${fmt(results.totalIpres + results.ir + results.trimf)}</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Salaire NET</div>
+                <div class="value">${fmt(results.salaireNet)}</div>
+            </div>
+        `;
 
-            // Barre de progression
-            const progress = (netMensuel / brutMensuel) * 100;
-            $("#progressFill").style.width = `${Math.max(0, Math.min(100, progress))}%`;
-
-            // Tableau détaillé
-            const tbl = $("#detail");
-            tbl.innerHTML = "";
-
-            const lignes = [
-                ["💰 Salaire de base", salaireBase, salaireBase * 12, "money"],
-                ...indemnites.map(ind => {
-                    const type = typesIndemnites.find(t => t.value === ind.type)?.label || "Indemnité";
-                    const montantMensuel = results.period === "annual" ? ind.montant / 12 : ind.montant;
-                    return [`🎁 ${type}`, montantMensuel, montantMensuel * 12, "money"];
-                }),
-                ["---", null, null, "separator"],
-                ["💵 Total brut", brutMensuel, brutMensuel * 12, "money highlight"],
-                ["---", null, null, "separator"],
-                ["📉 IPRES général (5.6%)", -cotisationGen, -cotisationGen * 12, "money negative"],
-                ...(cadre === "cadre" ? [["📉 IPRES Compl. (2.4%)", -cotisationComp, -cotisationComp * 12, "money negative"]] : []),
-                ["📊 Base après cotisations", baseSociale, baseSociale * 12, "money"],
-                ["🎯 Abattement 30% (max 900K)", -abattement, -abattement * 12, "money negative"],
-                ["📝 Base imposable IR", baseSociale - abattement, (baseSociale - abattement) * 12, "money"], // Correction de la base IR
-                ["---", null, null, "separator"],
-                ["🧮 IR théorique", -results.irTheorique / 12, -results.irTheorique, "money negative"],
-                ...(trimfActive ? [
-                    ["🛡️ TRIMF (plancher)", -trimf / 12, -trimf, "money negative"],
-                    ["🎯 IR retenu", -irMensuel, -irRetenu, "money negative highlight"]
-                ] : [["🎯 IR retenu", -irMensuel, -irRetenu, "money negative highlight"]]),
-                ["---", null, null, "separator"],
-                ["💳 Net à payer", netMensuel, netAnnuel, "money highlight"]
-            ];
-
-            lignes.forEach(ligne => {
-                const tr = document.createElement("tr");
-                if (ligne[0] === "---") {
-                    tr.innerHTML = `<td colspan="3" style="padding: 5px; background: var(--border);"></td>`;
-                } else {
-                    const [label, mensuel, annuel, className] = ligne;
-                    tr.innerHTML = `
-                        <td>${label}</td>
-                        <td class="${className}">${fmt(mensuel)}</td>
-                        <td class="${className}">${fmt(annuel)}</td>
-                    `;
-                }
-                tbl.appendChild(tr);
-            });
-
-            $("#pdfSection").classList.remove("hidden");
-            $("#status").className = "status-message status-success";
-            $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024 (IPRES/IR Corrigés)`;
-        } catch (error) {
-            console.error("Erreur dans updateUI:", error);
-            $("#status").className = "status-message status-warning";
-            $("#status").innerHTML = "❌ Erreur d'affichage des résultats";
-        }
+        $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024`;
+        $("#status").className = "status-message status-success";
     }
 
     function genererPDF() {
         if (!dernierCalcul) {
-            alert("❌ Aucun calcul disponible pour générer le PDF");
+            $("#status").innerHTML = "⚠️ Veuillez d'abord effectuer un calcul";
+            $("#status").className = "status-message status-warning";
             return;
         }
 
         try {
             const doc = new jsPDF();
-            const { employe, employeur, netMensuel, netAnnuel, totalCotisations, irRetenu, brutMensuel } = dernierCalcul;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            let y = 10;
 
-            // En-tête
             doc.setFillColor(99, 102, 241);
-            doc.rect(0, 0, 210, 40, 'F');
+            doc.rect(0, 0, pageWidth, 30, 'F');
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(20);
-            doc.text("RAPPORT DE SIMULATION SALARIALE (SÉNÉGAL)", 105, 15, { align: 'center' });
-            doc.setFontSize(12);
-            doc.text("Calculs basés sur les barèmes fiscaux 2024", 105, 25, { align: 'center' });
+            doc.text("💰 Fiche de Salaire", pageWidth / 2, 20, { align: 'center' });
 
-            // --- Section 1: Identification (Employeur/Employé) ---
-            let y = 50;
             doc.setTextColor(0, 0, 0);
-            doc.setFontSize(14);
-            doc.text("INFORMATIONS SUR LE CONTEXTE", 20, y);
-
             doc.setFontSize(10);
-            y += 10;
-            doc.text(`Employé: ${employe.nom}`, 20, y);
-            doc.text(`Poste: ${employe.poste}`, 110, y);
-            y += 6;
-            doc.text(`Employeur: ${employeur.nom}`, 20, y);
-            doc.text(`NINEA/Adresse: ${employeur.ninea}`, 110, y);
+            y = 40;
+
+            doc.text(`Nom: ${$("#nomEmploye").value || "N/A"}`, 20, y);
+            doc.text(`Poste: ${$("#posteEmploye").value || "N/A"}`, 120, y);
             y += 8;
-            doc.text(`Statut: ${dernierCalcul.cadre === "cadre" ? "Cadre" : "Non-cadre"}`, 20, y);
-            doc.text(`Parts familiales IR: ${$("#partsIR").value}`, 110, y);
-
-            // --- Section 2: Composition du Salaire ---
+            doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 20, y);
             y += 15;
-            doc.setFontSize(14);
-            doc.text("COMPOSITION DU SALAIRE", 20, y);
 
-            doc.setFontSize(10);
-            y += 5;
-            const tableColumnSalaire = ["Élément", "Mensuel", "Annuel"];
-            const tableRowsSalaire = [
-                ["Salaire de base", fmt(dernierCalcul.salaireBase) + " F CFA", fmt(dernierCalcul.salaireBase * 12) + " F CFA"],
-                ...dernierCalcul.indemnites.map(ind => {
-                    const type = typesIndemnites.find(t => t.value === ind.type)?.label || "Indemnité";
-                    const montantMensuel = dernierCalcul.period === "annual" ? ind.montant / 12 : ind.montant;
-                    return [type, fmt(montantMensuel) + " F CFA", fmt(montantMensuel * 12) + " F CFA"];
-                }),
-                ["TOTAL BRUT", fmt(dernierCalcul.brutMensuel) + " F CFA", fmt(dernierCalcul.brutMensuel * 12) + " F CFA"]
+            const data = [
+                ["Élément", "Montant (FCFA)"],
+                ["Salaire de base", fmt(dernierCalcul.salaireBase)],
+                ["Indemnités", fmt(dernierCalcul.totalIndemnites)],
+                ["Salaire Brut", fmt(dernierCalcul.salaireBrut)],
+                ["Cotisation IPRES Générale", fmt(dernierCalcul.cotisationIpresGen)],
+                ["Cotisation IPRES Complémentaire", fmt(dernierCalcul.cotisationIpresComp)],
+                ["Total IPRES", fmt(dernierCalcul.totalIpres)],
+                ["Impôt sur le Revenu", fmt(dernierCalcul.ir)],
             ];
 
-            doc.autoTable({
-                head: [tableColumnSalaire],
-                body: tableRowsSalaire,
-                startY: y + 5,
-                theme: 'grid',
-                styles: { fontSize: 10, cellPadding: 3 },
-                headStyles: { fillColor: [99, 102, 241] },
-                margin: { left: 20, right: 20 }
-            });
+            if (dernierCalcul.trimf > 0) {
+                data.push(["TRIMF", fmt(dernierCalcul.trimf)]);
+            }
 
-            // --- Section 3: Déductions et Net ---
-            const finalYSalaire = doc.lastAutoTable.finalY + 15;
-            doc.setFontSize(14);
-            doc.text("DÉTAIL DES DÉDUCTIONS ET RÉSULTAT NET", 20, finalYSalaire);
-
-            const tableColumn = ["Rubrique", "Mensuel", "Annuel"];
-            const tableRows = [
-                ["Cotisations IPRES", "-" + fmt(totalCotisations) + " F CFA", "-" + fmt(totalCotisations * 12) + " F CFA"],
-                ["Abattement IR (30% / max 900K)", "-" + fmt(dernierCalcul.abattement) + " F CFA", "-" + fmt(dernierCalcul.abattement * 12) + " F CFA"],
-                ["Base imposable IR", fmt(dernierCalcul.baseIRMensuelle) + " F CFA", fmt(dernierCalcul.baseIRAnnuelle) + " F CFA"],
-                ["IR retenu", "-" + fmt(irRetenu / 12) + " F CFA", "-" + fmt(irRetenu) + " F CFA"],
-                // Ligne finale en gras
-                [{ content: "SALAIRE NET À PAYER", styles: { fontStyle: 'bold', fillColor: [200, 220, 255] } },
-                 { content: fmt(netMensuel) + " F CFA", styles: { fontStyle: 'bold', fillColor: [200, 255, 200] } },
-                 { content: fmt(netAnnuel) + " F CFA", styles: { fontStyle: 'bold', fillColor: [200, 255, 200] } }
-                ]
-            ];
+            data.push(["Salaire NET", fmt(dernierCalcul.salaireNet)]);
 
             doc.autoTable({
-                head: [tableColumn],
-                body: tableRows,
-                startY: finalYSalaire + 10,
-                theme: 'grid',
-                styles: { fontSize: 10, cellPadding: 3 },
-                headStyles: { fillColor: [99, 102, 241] },
-                margin: { left: 20, right: 20 }
+                head: [data[0]],
+                body: data.slice(1),
+                startY: y,
+                styles: { font: 'helvetica', fontSize: 10 },
+                headStyles: { fillColor: [99, 102, 241], textColor: 255 }
             });
 
-            // --- Section 4: Résumé Final ---
-            const finalY = doc.lastAutoTable.finalY + 15;
-            doc.setFontSize(12);
-            doc.setTextColor(79, 70, 229); // Couleur primaire pour le résumé
-            doc.text("RÉSUMÉ FINAL", 20, finalY);
+            const filename = `Fiche_Salaire_${$("#nomEmploye").value || "employe"}_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(filename);
 
-            doc.setFontSize(10);
-            doc.setTextColor(0, 0, 0);
-            const impotTotalAnnuel = (totalCotisations * 12) + irRetenu;
-            const tauxEffectif = (impotTotalAnnuel / (brutMensuel * 12)) * 100;
-
-            doc.text(`Taux d'imposition effectif (IR + Cotisations): ${tauxEffectif.toFixed(1)}%`, 20, finalY + 8);
-            doc.text(`Impôt total annuel: ${fmt(impotTotalAnnuel)} F CFA`, 20, finalY + 16);
-            doc.text(`Total Brut Annuel: ${fmt(brutMensuel * 12)} F CFA`, 110, finalY + 8);
-            doc.text(`Total Net Annuel: ${fmt(netAnnuel)} F CFA`, 110, finalY + 16);
-
-
-            // Pied de page
-            doc.setFontSize(8);
-            doc.setTextColor(128, 128, 128);
-            doc.text("Ce document a été généré automatiquement par le simulateur de salaire Sénégal. Les calculs sont basés sur les législations fiscales et sociales connues en 2024.",
-                105, 290, { align: 'center' });
-
-            // Sauvegarde du PDF
-            doc.save(`rapport-salaire-${employe.nom.replace(/\s/g, '-') || 'simule'}-${new Date().toISOString().split('T')[0]}.pdf`);
-
-            $("#status").className = "status-message status-success";
             $("#status").innerHTML = "✅ PDF généré avec succès !";
+            $("#status").className = "status-message status-success";
         } catch (error) {
-            console.error("Erreur génération PDF:", error);
+            $("#status").innerHTML = `❌ Erreur PDF : ${error.message}`;
             $("#status").className = "status-message status-warning";
-            $("#status").innerHTML = "❌ Erreur lors de la génération du PDF";
         }
     }
 
-    // Événements
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialiser avec une indemnité
         ajouterIndemnite();
 
         $("#calcBtn").addEventListener('click', calc);
         $("#pdfBtn").addEventListener('click', genererPDF);
         $("#ajouterIndemnite").addEventListener('click', ajouterIndemnite);
-
         $("#salaireBase").addEventListener('input', calculerTotalBrut);
 
-        $("#resetBtn").addEventListener('click', () => {
-            // Réinitialisation des champs d'identification
-            $("#nomEmploye").value = "";
-            $("#posteEmploye").value = "";
-            $("#nomEntreprise").value = "";
-            $("#nineaEntreprise").value = "";
-
-            // Réinitialisation des champs de calcul
-            $("#salaireBase").value = "";
-            $("#partsIR").value = "1";
-            $("#trimfActive").value = "no";
-            $("#partsTRIMF").value = "1";
-            indemnites = [];
-            afficherIndemnites();
-            $("#detail").innerHTML = "";
-            $("#status").className = "status-message status-info";
-            $("#status").innerHTML = "🔄 Données réinitialisées";
-            $("#netMensuel").textContent = "-";
-            $("#impotTotal").textContent = "-";
-            $("#tauxEffectif").textContent = "-";
-            $("#progressFill").style.width = "0%";
-            $("#pdfSection").classList.add("hidden");
-            $("#totalBrutAffichage").textContent = "0";
-            dernierCalcul = null;
+        $("#trimfActive").addEventListener('change', (e) => {
+            $("#trimfOptions").style.display = e.target.checked ? 'block' : 'none';
         });
 
-        // Calcul automatique lors de la modification des champs importants
-        document.querySelectorAll("#salaireBase, #partsIR, #trimfActive, #trimfParPartAn, #partsTRIMF, #cadre, #period, #nomEmploye, #posteEmploye, #nomEntreprise, #nineaEntreprise").forEach(element => {
-            element.addEventListener("input", () => {
-                if (element.id === "salaireBase") calculerTotalBrut();
-                // Ne recalculer que si le salaire brut est valide
-                if ($("#salaireBase").value && parseFloat($("#salaireBase").value) > 0) {
-                    clearTimeout(window.calcTimeout);
-                    window.calcTimeout = setTimeout(calc, 1000);
-                }
+        $("#resetBtn").addEventListener('click', () => {
+            dernierCalcul = null;
+            indemnites = [];
+            $("#salaireBase").value = '';
+            $("#partsIR").value = '1';
+            $("#nomEmploye").value = '';
+            $("#posteEmploye").value = '';
+            $("#trimfActive").checked = false;
+            $("#trimfOptions").style.display = 'none';
+            afficherIndemnites();
+            $("#resultsBody").innerHTML = '<tr><td colspan="2" style="text-align:center;">Réinitialisé</td></tr>';
+            $("#status").innerHTML = "🔄 Formulaire réinitialisé";
+        });
+
+        document.querySelectorAll("#salaireBase, #partsIR, #period").forEach(el => {
+            el.addEventListener('change', () => {
+                if (dernierCalcul) calc();
             });
         });
 
-
-        // Exemple pré-rempli pour démonstration
         setTimeout(() => {
-            $("#salaireBase").value = "400000";
-            $("#partsIR").value = "1.5";
-            $("#nomEmploye").value = "Diop Oumar";
-            $("#nomEntreprise").value = "SeneTech Solutions";
-            calc(); // Calculer automatiquement
-        }, 500);
+            $("#salaireBase").value = "500000";
+            $("#partsIR").value = "1";
+            calc();
+        }, 300);
     });
 </script>
 </body>
