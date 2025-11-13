@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>💰 Simulateur de Salaire Sénégal 2024</title>
+    <title>💰 Simulateur de Salaire Sénégal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
@@ -144,6 +144,7 @@
         .btn-primary {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            width: 100%;
         }
 
         .btn-primary:hover {
@@ -155,6 +156,7 @@
             background: transparent;
             border: 2px solid var(--border);
             color: var(--text-muted);
+            width: auto;
         }
 
         .btn-secondary:hover {
@@ -165,6 +167,7 @@
         .btn-success {
             background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
             color: white;
+            width: auto;
         }
 
         .btn-success:hover {
@@ -175,6 +178,7 @@
         .btn-warning {
             background: linear-gradient(135deg, var(--warning) 0%, #d97706 100%);
             color: white;
+            width: auto;
         }
 
         .btn-warning:hover {
@@ -186,11 +190,12 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .button-group button {
             flex: 1;
-            min-width: 150px;
+            min-width: 120px;
         }
 
         .money {
@@ -201,10 +206,6 @@
 
         .money.negative {
             color: var(--danger);
-        }
-
-        .money::before {
-            content: "";
         }
 
         .results-table {
@@ -221,10 +222,6 @@
 
         .results-table th:first-child, .results-table td:first-child {
             text-align: left;
-        }
-
-        .results-table .money {
-            font-variant-numeric: tabular-nums;
         }
 
         .results-table tr:hover {
@@ -249,12 +246,6 @@
             margin: 20px 0;
         }
 
-        @media (max-width: 500px) {
-            .summary-cards {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
         .summary-card {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
             padding: 15px;
@@ -273,21 +264,6 @@
         .summary-card .label {
             font-size: 0.9rem;
             color: var(--text-muted);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(99, 102, 241, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-            transition: width 0.3s ease;
         }
 
         .status-message {
@@ -313,48 +289,6 @@
             background: rgba(245, 158, 11, 0.15);
             color: var(--warning);
             border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .emoji {
-            font-size: 1.2rem;
-            margin-right: 5px;
-        }
-
-        .tooltip {
-            position: relative;
-            border-bottom: 1px dotted var(--primary);
-        }
-
-        .tooltip::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-dark);
-            color: var(--text-light);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            border: 1px solid var(--border);
-        }
-
-        .tooltip:hover::after {
-            opacity: 1;
-        }
-
-        .pdf-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border);
-        }
-
-        .hidden {
-            display: none;
         }
 
         .indemnites-section {
@@ -405,17 +339,31 @@
             color: var(--success);
             text-align: right;
         }
+
+        .nested-card {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 15px;
+        }
+
+        .nested-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>💰 Simulateur de Salaire Sénégal</h1>
-        <p class="subtitle">Calculez votre salaire net en tenant compte de l'IR, des cotisations IPRES et de la TRIMF (Version 2024 Corrigée)</p>
+        <p class="subtitle">Calculez votre salaire net avec le barème IR en vigueur, IPRES et TRIMF</p>
     </div>
 
     <div class="grid">
         <div>
+            <!-- IDENTIFICATION -->
             <div class="card" id="identificationCard">
                 <h3>Informations Personnelles</h3>
                 <div class="input-group">
@@ -428,6 +376,7 @@
                 </div>
             </div>
 
+            <!-- PARAMETRES SALAIRE -->
             <div class="card">
                 <h3>Paramètres de Calcul</h3>
                 <div class="input-group">
@@ -453,12 +402,14 @@
                     </select>
                 </div>
 
-                <div class="card">
-                    <h3>Indemnités</h3>
+                <!-- INDEMNITES -->
+                <div class="nested-card">
+                    <h4>Indemnités</h4>
                     <div id="indemnites-container"></div>
-                    <button class="btn-secondary" id="ajouterIndemnite">+ Ajouter une indemnité</button>
+                    <button class="btn-secondary" id="ajouterIndemnite" style="margin-top: 10px;">+ Ajouter une indemnité</button>
                 </div>
 
+                <!-- TOTAL BRUT -->
                 <div class="salaire-composition">
                     <label>Total Salaire Brut</label>
                     <div class="total-brut">
@@ -467,6 +418,7 @@
                 </div>
             </div>
 
+            <!-- TRIMF -->
             <div class="card">
                 <h3>Options TRIMF</h3>
                 <div class="input-group">
@@ -483,6 +435,7 @@
             </div>
         </div>
 
+        <!-- RESULTATS -->
         <div class="card">
             <h3>Résultats du Calcul</h3>
             <div id="status" class="status-message status-info">
@@ -506,7 +459,7 @@
 
             <div class="button-group">
                 <button class="btn-primary" id="calcBtn">🧮 Calculer</button>
-                <button class="btn-warning" id="pdfBtn">📄 Générer PDF</button>
+                <button class="btn-warning" id="pdfBtn">📄 PDF</button>
                 <button class="btn-secondary" id="resetBtn">🔄 Réinitialiser</button>
             </div>
         </div>
@@ -545,6 +498,19 @@
     const IPRES_COMP_PLAF = 1296000;
     const IPRES_GEN_TAUX = 0.056;
     const IPRES_COMP_TAUX = 0.024;
+    const CFCE_TAUX = 0.03;
+
+    // BARÈME IR SÉNÉGAL
+    const BAREME_IR_SENEGAL = [
+        { min: 0, max: 630000, taux: 0 },
+        { min: 630001, max: 1500000, taux: 0.20 },
+        { min: 1500001, max: 4000000, taux: 0.30 },
+        { min: 4000001, max: 8000000, taux: 0.35 },
+        { min: 8000001, max: 13500000, taux: 0.37 },
+        { min: 13500001, max: Infinity, taux: 0.40 }
+    ];
+
+    const TAUX_BOUCLIER_FISCAL = 0.40;
 
     let indemnites = [];
 
@@ -573,7 +539,7 @@
                     ${typesIndemnites.map(t => `<option value="${t.value}" ${t.value === indemnite.type ? 'selected' : ''}>${t.label}</option>`).join('')}
                 </select>
                 <input type="number" class="montant-indemnite" data-id="${indemnite.id}" value="${indemnite.montant}" min="0" step="1000" placeholder="Montant">
-                <button class="remove-indemnite" data-id="${indemnite.id}">✕ Supprimer</button>
+                <button class="remove-indemnite" data-id="${indemnite.id}">✕</button>
             `;
             container.appendChild(div);
         });
@@ -597,6 +563,7 @@
 
         container.querySelectorAll('.remove-indemnite').forEach(button => {
             button.addEventListener('click', (e) => {
+                e.preventDefault();
                 const id = parseInt(e.target.dataset.id);
                 supprimerIndemnite(id);
             });
@@ -611,18 +578,34 @@
         return totalBrut;
     }
 
-    function impotProgressif(base, parts, bareme) {
-        const quotient = base / parts;
-        let impot = 0, precedent = 0;
+    // CALCUL IR SÉNÉGAL AVEC BARÈME PROGRESSIF CORRECT
+    function calculerIRSenegal(reveluAnnuel, nbParts) {
+        const quotient = reveluAnnuel / nbParts;
+        let impotQuotient = 0;
+        let precedent = 0;
 
-        for (const tranche of bareme) {
+        for (const tranche of BAREME_IR_SENEGAL) {
             if (quotient <= tranche.min) break;
-            const imposable = Math.min(quotient, tranche.max) - precedent;
-            impot += imposable * tranche.taux;
+
+            const min = Math.max(quotient, tranche.min);
+            const max = Math.min(quotient, tranche.max);
+
+            if (max > precedent) {
+                const imposable = max - Math.max(tranche.min, precedent);
+                impotQuotient += imposable * tranche.taux;
+            }
+
             precedent = Math.min(quotient, tranche.max);
+            if (quotient <= tranche.max) break;
         }
 
-        return impot * parts;
+        const impotBrut = impotQuotient * nbParts;
+
+        // Application du bouclier fiscal
+        const bouclierFiscal = reveluAnnuel * TAUX_BOUCLIER_FISCAL;
+        const impotDu = Math.min(impotBrut, bouclierFiscal);
+
+        return impotDu;
     }
 
     function calc() {
@@ -638,26 +621,32 @@
             const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
             const salaireBrut = salaireBase + totalIndemnites;
 
+            // IPRES
             const cotisationIpresGen = Math.min(salaireBrut, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
             const baseCotisationIpresComp = Math.max(0, salaireBrut - IPRES_GEN_PLAF);
             const cotisationIpresComp = Math.min(baseCotisationIpresComp, IPRES_COMP_PLAF) * IPRES_COMP_TAUX;
             const totalIpres = cotisationIpresGen + cotisationIpresComp;
 
+            // IR (MENSUEL ou ANNUEL)
             let ir = 0;
-            const bareme = [
-                { min: 0, max: 153000, taux: 0 },
-                { min: 153000, max: 500000, taux: 0.2 },
-                { min: 500000, max: 1000000, taux: 0.3 },
-                { min: 1000000, max: Infinity, taux: 0.38 }
-            ];
-            ir = impotProgressif(salaireBrut, parts, bareme);
+            if (period === "annuel") {
+                ir = calculerIRSenegal(salaireBrut, parts);
+            } else {
+                const reveluAnnuel = salaireBrut * 12;
+                const irAnnuel = calculerIRSenegal(reveluAnnuel, parts);
+                ir = irAnnuel / 12;
+            }
 
+            // TRIMF
             let trimf = 0;
             if (trimfActive) {
                 const partsTrimf = parseFloat($("#partsTRIMF").value) || 1;
                 const trimfParPartAn = parseFloat($("#trimfParPartAn").value) || 20000;
                 trimf = (period === "mensuel") ? (trimfParPartAn * partsTrimf / 12) : (trimfParPartAn * partsTrimf);
             }
+
+            // CFCE (charge employeur)
+            const cfce = salaireBrut * CFCE_TAUX;
 
             const salaireNet = salaireBrut - totalIpres - ir - trimf;
 
@@ -670,6 +659,7 @@
                 totalIpres,
                 ir,
                 trimf,
+                cfce,
                 salaireNet,
                 parts,
                 cadre,
@@ -688,13 +678,14 @@
         const tbody = $("#resultsBody");
         tbody.innerHTML = `
             <tr><td>Salaire de base</td><td class="money">${fmt(results.salaireBase)}</td></tr>
-            <tr><td>Indemnités</td><td class="money">${fmt(results.totalIndemnites)}</td></tr>
+            ${results.totalIndemnites > 0 ? `<tr><td>Indemnités</td><td class="money">${fmt(results.totalIndemnites)}</td></tr>` : ''}
             <tr class="highlight"><td>Salaire Brut</td><td class="money">${fmt(results.salaireBrut)}</td></tr>
             <tr><td>Cotisation IPRES Générale</td><td class="money negative">${fmt(results.cotisationIpresGen)}</td></tr>
             <tr><td>Cotisation IPRES Complémentaire</td><td class="money negative">${fmt(results.cotisationIpresComp)}</td></tr>
             <tr><td>Total IPRES</td><td class="money negative">${fmt(results.totalIpres)}</td></tr>
-            <tr><td>Impôt sur le Revenu</td><td class="money negative">${fmt(results.ir)}</td></tr>
+            <tr><td>Impôt sur le Revenu (${results.parts} part${results.parts > 1 ? 's' : ''})</td><td class="money negative">${fmt(results.ir)}</td></tr>
             ${results.trimf > 0 ? `<tr><td>TRIMF</td><td class="money negative">${fmt(results.trimf)}</td></tr>` : ''}
+            ${results.cfce > 0 ? `<tr><td>CFCE (charge employeur)</td><td class="money negative">${fmt(results.cfce)}</td></tr>` : ''}
             <tr class="highlight"><td>Salaire NET</td><td class="money">${fmt(results.salaireNet)}</td></tr>
         `;
 
@@ -703,11 +694,10 @@
             <div class="summary-card">
                 <div class="label">Salaire Brut</div>
                 <div class="value">${fmt(results.salaireBrut)}</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
             </div>
             <div class="summary-card">
                 <div class="label">Retenues</div>
-                <div class="value negative" style="color: var(--danger)">${fmt(results.totalIpres + results.ir + results.trimf)}</div>
+                <div class="value" style="color: var(--danger)">${fmt(results.totalIpres + results.ir + results.trimf)}</div>
             </div>
             <div class="summary-card">
                 <div class="label">Salaire NET</div>
@@ -715,7 +705,7 @@
             </div>
         `;
 
-        $("#status").innerHTML = `✅ Calcul effectué ${trimfActive ? "(TRIMF activée)" : ""} • Mise à jour 2024`;
+        $("#status").innerHTML = `✅ Calcul effectué${trimfActive ? " • TRIMF activée" : ""}`;
         $("#status").className = "status-message status-success";
     }
 
@@ -729,7 +719,6 @@
         try {
             const doc = new jsPDF();
             const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
             let y = 10;
 
             doc.setFillColor(99, 102, 241);
@@ -746,21 +735,32 @@
             doc.text(`Poste: ${$("#posteEmploye").value || "N/A"}`, 120, y);
             y += 8;
             doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 20, y);
+            doc.text(`Parts IR: ${dernierCalcul.parts}`, 120, y);
             y += 15;
 
             const data = [
                 ["Élément", "Montant (FCFA)"],
                 ["Salaire de base", fmt(dernierCalcul.salaireBase)],
-                ["Indemnités", fmt(dernierCalcul.totalIndemnites)],
-                ["Salaire Brut", fmt(dernierCalcul.salaireBrut)],
-                ["Cotisation IPRES Générale", fmt(dernierCalcul.cotisationIpresGen)],
-                ["Cotisation IPRES Complémentaire", fmt(dernierCalcul.cotisationIpresComp)],
-                ["Total IPRES", fmt(dernierCalcul.totalIpres)],
-                ["Impôt sur le Revenu", fmt(dernierCalcul.ir)],
             ];
+
+            if (dernierCalcul.totalIndemnites > 0) {
+                data.push(["Indemnités", fmt(dernierCalcul.totalIndemnites)]);
+            }
+
+            data.push(
+                ["Salaire Brut", fmt(dernierCalcul.salaireBrut)],
+                ["IPRES Générale", fmt(dernierCalcul.cotisationIpresGen)],
+                ["IPRES Complémentaire", fmt(dernierCalcul.cotisationIpresComp)],
+                ["Total IPRES", fmt(dernierCalcul.totalIpres)],
+                ["Impôt sur le Revenu", fmt(dernierCalcul.ir)]
+            );
 
             if (dernierCalcul.trimf > 0) {
                 data.push(["TRIMF", fmt(dernierCalcul.trimf)]);
+            }
+
+            if (dernierCalcul.cfce > 0) {
+                data.push(["CFCE", fmt(dernierCalcul.cfce)]);
             }
 
             data.push(["Salaire NET", fmt(dernierCalcul.salaireNet)]);
@@ -799,15 +799,16 @@
         $("#resetBtn").addEventListener('click', () => {
             dernierCalcul = null;
             indemnites = [];
-            $("#salaireBase").value = '';
+            $("#salaireBase").value = '500000';
             $("#partsIR").value = '1';
             $("#nomEmploye").value = '';
             $("#posteEmploye").value = '';
             $("#trimfActive").checked = false;
             $("#trimfOptions").style.display = 'none';
             afficherIndemnites();
-            $("#resultsBody").innerHTML = '<tr><td colspan="2" style="text-align:center;">Réinitialisé</td></tr>';
+            $("#resultsBody").innerHTML = '<tr><td colspan="2" style="text-align:center; color: var(--text-muted);">Aucun calcul effectué</td></tr>';
             $("#status").innerHTML = "🔄 Formulaire réinitialisé";
+            $("#status").className = "status-message status-info";
         });
 
         document.querySelectorAll("#salaireBase, #partsIR, #period").forEach(el => {
@@ -817,8 +818,6 @@
         });
 
         setTimeout(() => {
-            $("#salaireBase").value = "500000";
-            $("#partsIR").value = "1";
             calc();
         }, 300);
     });
