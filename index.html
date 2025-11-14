@@ -102,6 +102,41 @@
             content: "📊";
         }
 
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .input-group {
             margin-bottom: 20px;
         }
@@ -291,14 +326,6 @@
             border: 1px solid rgba(245, 158, 11, 0.3);
         }
 
-        .indemnites-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(99, 102, 241, 0.05);
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
         .indemnite-item {
             display: grid;
             grid-template-columns: 2fr 1fr auto;
@@ -352,6 +379,24 @@
             margin-top: 0;
             color: var(--primary);
         }
+
+        .mode-switch {
+            padding: 15px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mode-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -376,44 +421,96 @@
                 </div>
             </div>
 
-            <!-- PARAMETRES SALAIRE -->
+            <!-- MODE SELECTION -->
             <div class="card">
-                <h3>Paramètres de Calcul</h3>
-                <div class="input-group">
-                    <label for="salaireBase">Salaire de base (FCFA)</label>
-                    <input type="number" id="salaireBase" value="500000" min="0" step="1000">
-                </div>
-                <div class="input-group">
-                    <label for="partsIR">Nombre de parts IR</label>
-                    <input type="number" id="partsIR" value="1" min="1" step="0.5">
-                </div>
-                <div class="input-group">
-                    <label for="period">Période de calcul</label>
-                    <select id="period">
-                        <option value="mensuel">Mensuel</option>
-                        <option value="annuel">Annuel</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="cadre">Statut</label>
-                    <select id="cadre">
-                        <option value="nc">Non-Cadre</option>
-                        <option value="cadre">Cadre</option>
-                    </select>
+                <h3>Mode de Calcul</h3>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="brut-to-net">📈 Brut → Net</button>
+                    <button class="tab-btn" data-tab="net-to-brut">📉 Net → Brut</button>
                 </div>
 
-                <!-- INDEMNITES -->
-                <div class="nested-card">
-                    <h4>Indemnités</h4>
-                    <div id="indemnites-container"></div>
-                    <button class="btn-secondary" id="ajouterIndemnite" style="margin-top: 10px;">+ Ajouter une indemnité</button>
+                <!-- TAB 1: BRUT TO NET -->
+                <div id="brut-to-net" class="tab-content active">
+                    <div class="input-group">
+                        <label for="salaireBase">Salaire de base (FCFA)</label>
+                        <input type="number" id="salaireBase" value="500000" min="0" step="1000">
+                    </div>
+                    <div class="input-group">
+                        <label for="partsIR">Nombre de parts IR</label>
+                        <input type="number" id="partsIR" value="1" min="1" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="period">Période de calcul</label>
+                        <select id="period">
+                            <option value="mensuel">Mensuel</option>
+                            <option value="annuel">Annuel</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="cadre">Statut</label>
+                        <select id="cadre">
+                            <option value="nc">Non-Cadre</option>
+                            <option value="cadre">Cadre</option>
+                        </select>
+                    </div>
+
+                    <!-- INDEMNITES -->
+                    <div class="nested-card">
+                        <h4>Indemnités</h4>
+                        <div id="indemnites-container"></div>
+                        <button class="btn-secondary" id="ajouterIndemnite" style="margin-top: 10px;">+ Ajouter une indemnité</button>
+                    </div>
+
+                    <!-- TOTAL BRUT -->
+                    <div class="salaire-composition">
+                        <label>Total Salaire Brut</label>
+                        <div class="total-brut">
+                            <span id="totalBrutAffichage">0</span> FCFA
+                        </div>
+                    </div>
                 </div>
 
-                <!-- TOTAL BRUT -->
-                <div class="salaire-composition">
-                    <label>Total Salaire Brut</label>
-                    <div class="total-brut">
-                        <span id="totalBrutAffichage">0</span> FCFA
+                <!-- TAB 2: NET TO BRUT -->
+                <div id="net-to-brut" class="tab-content">
+                    <div class="mode-switch">
+                        <span class="mode-indicator">🔄 Mode inverse activé</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="salaireNetRecherche">Salaire Net désiré (FCFA)</label>
+                        <input type="number" id="salaireNetRecherche" placeholder="Entrez le montant net souhaité" min="0" step="1000">
+                    </div>
+                    <div class="input-group">
+                        <label for="partsIRInverse">Nombre de parts IR</label>
+                        <input type="number" id="partsIRInverse" value="1" min="1" step="0.5">
+                    </div>
+                    <div class="input-group">
+                        <label for="periodInverse">Période de calcul</label>
+                        <select id="periodInverse">
+                            <option value="mensuel">Mensuel</option>
+                            <option value="annuel">Annuel</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="cadreInverse">Statut</label>
+                        <select id="cadreInverse">
+                            <option value="nc">Non-Cadre</option>
+                            <option value="cadre">Cadre</option>
+                        </select>
+                    </div>
+
+                    <!-- INDEMNITES INVERSE -->
+                    <div class="nested-card">
+                        <h4>Indemnités</h4>
+                        <div id="indemnites-container-inverse"></div>
+                        <button class="btn-secondary" id="ajouterIndemniteInverse" style="margin-top: 10px;">+ Ajouter une indemnité</button>
+                    </div>
+
+                    <!-- TOTAL BRUT CALCULE -->
+                    <div class="salaire-composition">
+                        <label>Salaire Brut Calculé</label>
+                        <div class="total-brut">
+                            <span id="totalBrutCalcule">-</span> FCFA
+                        </div>
                     </div>
                 </div>
             </div>
@@ -470,6 +567,9 @@
     // Variables globales
     let dernierCalcul = null;
     let trimfActive = false;
+    let modeActuel = "brut-to-net";
+    let indemnites = [];
+    let indemnitesInverse = [];
     const { jsPDF } = window.jspdf;
 
     const $ = (s) => document.querySelector(s);
@@ -500,7 +600,6 @@
     const IPRES_COMP_TAUX = 0.024;
     const CFCE_TAUX = 0.03;
 
-    // BARÈME IR SÉNÉGAL
     const BAREME_IR_SENEGAL = [
         { min: 0, max: 630000, taux: 0 },
         { min: 630001, max: 1500000, taux: 0.20 },
@@ -512,50 +611,74 @@
 
     const TAUX_BOUCLIER_FISCAL = 0.40;
 
-    let indemnites = [];
+    // TAB SWITCHING
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            e.target.classList.add('active');
+            const tabId = e.target.dataset.tab;
+            modeActuel = tabId;
+            document.getElementById(tabId).classList.add('active');
+            
+            calc();
+        });
+    });
 
-    function ajouterIndemnite() {
-        const id = Date.now();
-        indemnites.push({ id, type: "prime_anciennete", montant: 0 });
-        afficherIndemnites();
+    // INDEMNITES FUNCTIONS
+    function ajouterIndemnite(isInverse = false) {
+        const id = Date.now() + Math.random();
+        const list = isInverse ? indemnitesInverse : indemnites;
+        list.push({ id, type: "prime_anciennete", montant: 0 });
+        afficherIndemnites(isInverse);
         calculerTotalBrut();
     }
 
-    function supprimerIndemnite(id) {
-        indemnites = indemnites.filter(ind => ind.id !== id);
-        afficherIndemnites();
+    function supprimerIndemnite(id, isInverse = false) {
+        const list = isInverse ? indemnitesInverse : indemnites;
+        if (isInverse) {
+            indemnitesInverse = list.filter(ind => ind.id !== id);
+        } else {
+            indemnites = list.filter(ind => ind.id !== id);
+        }
+        afficherIndemnites(isInverse);
         calculerTotalBrut();
     }
 
-    function afficherIndemnites() {
-        const container = $("#indemnites-container");
+    function afficherIndemnites(isInverse = false) {
+        const containerId = isInverse ? "#indemnites-container-inverse" : "#indemnites-container";
+        const container = $(containerId);
+        const list = isInverse ? indemnitesInverse : indemnites;
         container.innerHTML = '';
 
-        indemnites.forEach((indemnite) => {
+        list.forEach((indemnite) => {
             const div = document.createElement('div');
             div.className = 'indemnite-item';
             div.innerHTML = `
-                <select class="type-indemnite" data-id="${indemnite.id}">
+                <select class="type-indemnite" data-id="${indemnite.id}" data-inverse="${isInverse}">
                     ${typesIndemnites.map(t => `<option value="${t.value}" ${t.value === indemnite.type ? 'selected' : ''}>${t.label}</option>`).join('')}
                 </select>
-                <input type="number" class="montant-indemnite" data-id="${indemnite.id}" value="${indemnite.montant}" min="0" step="1000" placeholder="Montant">
-                <button class="remove-indemnite" data-id="${indemnite.id}">✕</button>
+                <input type="number" class="montant-indemnite" data-id="${indemnite.id}" data-inverse="${isInverse}" value="${indemnite.montant}" min="0" step="1000" placeholder="Montant">
+                <button class="remove-indemnite" data-id="${indemnite.id}" data-inverse="${isInverse}">✕</button>
             `;
             container.appendChild(div);
         });
 
         container.querySelectorAll('.type-indemnite').forEach(select => {
             select.addEventListener('change', (e) => {
-                const id = parseInt(e.target.dataset.id);
-                const ind = indemnites.find(i => i.id === id);
+                const id = parseFloat(e.target.dataset.id);
+                const inv = e.target.dataset.inverse === 'true';
+                const ind = (inv ? indemnitesInverse : indemnites).find(i => i.id === id);
                 if (ind) ind.type = e.target.value;
             });
         });
 
         container.querySelectorAll('.montant-indemnite').forEach(input => {
             input.addEventListener('input', (e) => {
-                const id = parseInt(e.target.dataset.id);
-                const ind = indemnites.find(i => i.id === id);
+                const id = parseFloat(e.target.dataset.id);
+                const inv = e.target.dataset.inverse === 'true';
+                const ind = (inv ? indemnitesInverse : indemnites).find(i => i.id === id);
                 if (ind) ind.montant = parseFloat(e.target.value) || 0;
                 calculerTotalBrut();
             });
@@ -564,8 +687,9 @@
         container.querySelectorAll('.remove-indemnite').forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
-                const id = parseInt(e.target.dataset.id);
-                supprimerIndemnite(id);
+                const id = parseFloat(e.target.dataset.id);
+                const inv = e.target.dataset.inverse === 'true';
+                supprimerIndemnite(id, inv);
             });
         });
     }
@@ -578,7 +702,7 @@
         return totalBrut;
     }
 
-    // CALCUL IR SÉNÉGAL AVEC BARÈME PROGRESSIF CORRECT
+    // CALCUL IR SÉNÉGAL
     function calculerIRSenegal(reveluAnnuel, nbParts) {
         const quotient = reveluAnnuel / nbParts;
         let impotQuotient = 0;
@@ -600,44 +724,41 @@
         }
 
         const impotBrut = impotQuotient * nbParts;
-
-        // Application du bouclier fiscal
         const bouclierFiscal = reveluAnnuel * TAUX_BOUCLIER_FISCAL;
         const impotDu = Math.min(impotBrut, bouclierFiscal);
 
         return impotDu;
     }
 
-    function calc() {
-        try {
-            const salaireBase = parseFloat($("#salaireBase").value) || 0;
-            const parts = parseFloat($("#partsIR").value) || 1;
-            trimfActive = $("#trimfActive").checked;
-            const cadre = $("#cadre").value;
-            const period = $("#period").value;
+    // CALCUL INVERSE: Net → Brut (méthode itérative)
+    function calculerBrutFromNet(salaireNetDesire, parts, period, indemnitesArray = []) {
+        const totalIndemnitesFixe = indemnitesArray.reduce((sum, ind) => sum + (ind.montant || 0), 0);
+        
+        let brut = salaireNetDesire * 1.2; // Estimation initiale
+        let iterations = 0;
+        const maxIterations = 100;
+        const tolerance = 100; // 100 FCFA de tolerance
 
-            if (salaireBase <= 0) throw new Error("Salaire de base doit être > 0");
-
-            const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
-            const salaireBrut = salaireBase + totalIndemnites;
-
-            // IPRES
-            const cotisationIpresGen = Math.min(salaireBrut, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
-            const baseCotisationIpresComp = Math.max(0, salaireBrut - IPRES_GEN_PLAF);
+        while (iterations < maxIterations) {
+            const salaireBrutTest = brut;
+            
+            // Calcul IPRES
+            const cotisationIpresGen = Math.min(salaireBrutTest, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
+            const baseCotisationIpresComp = Math.max(0, salaireBrutTest - IPRES_GEN_PLAF);
             const cotisationIpresComp = Math.min(baseCotisationIpresComp, IPRES_COMP_PLAF) * IPRES_COMP_TAUX;
             const totalIpres = cotisationIpresGen + cotisationIpresComp;
 
-            // IR (MENSUEL ou ANNUEL)
+            // Calcul IR
             let ir = 0;
             if (period === "annuel") {
-                ir = calculerIRSenegal(salaireBrut, parts);
+                ir = calculerIRSenegal(salaireBrutTest, parts);
             } else {
-                const reveluAnnuel = salaireBrut * 12;
+                const reveluAnnuel = salaireBrutTest * 12;
                 const irAnnuel = calculerIRSenegal(reveluAnnuel, parts);
                 ir = irAnnuel / 12;
             }
 
-            // TRIMF
+            // Calcul TRIMF
             let trimf = 0;
             if (trimfActive) {
                 const partsTrimf = parseFloat($("#partsTRIMF").value) || 1;
@@ -645,39 +766,163 @@
                 trimf = (period === "mensuel") ? (trimfParPartAn * partsTrimf / 12) : (trimfParPartAn * partsTrimf);
             }
 
-            // CFCE (charge employeur)
-            const cfce = salaireBrut * CFCE_TAUX;
+            const salaireNetCalcule = salaireBrutTest - totalIpres - ir - trimf;
+            const diff = salaireNetCalcule - salaireNetDesire;
 
-            const salaireNet = salaireBrut - totalIpres - ir - trimf;
+            if (Math.abs(diff) < tolerance) {
+                return Math.round(salaireBrutTest);
+            }
 
-            dernierCalcul = {
-                salaireBase,
-                salaireBrut,
-                totalIndemnites,
-                cotisationIpresGen,
-                cotisationIpresComp,
-                totalIpres,
-                ir,
-                trimf,
-                cfce,
-                salaireNet,
-                parts,
-                cadre,
-                period,
-                indemnites: [...indemnites]
-            };
+            brut = brut - (diff * 0.5);
+            iterations++;
+        }
 
-            updateUI(dernierCalcul);
+        return Math.round(brut);
+    }
+
+    function calc() {
+        try {
+            if (modeActuel === "brut-to-net") {
+                calcBrutToNet();
+            } else {
+                calcNetToBrut();
+            }
         } catch (error) {
             $("#status").innerHTML = `❌ Erreur : ${error.message}`;
             $("#status").className = "status-message status-warning";
         }
     }
 
+    function calcBrutToNet() {
+        const salaireBase = parseFloat($("#salaireBase").value) || 0;
+        const parts = parseFloat($("#partsIR").value) || 1;
+        trimfActive = $("#trimfActive").checked;
+        const cadre = $("#cadre").value;
+        const period = $("#period").value;
+
+        if (salaireBase <= 0) throw new Error("Salaire de base doit être > 0");
+
+        const totalIndemnites = indemnites.reduce((sum, ind) => sum + (ind.montant || 0), 0);
+        const salaireBrut = salaireBase + totalIndemnites;
+
+        // IPRES
+        const cotisationIpresGen = Math.min(salaireBrut, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
+        const baseCotisationIpresComp = Math.max(0, salaireBrut - IPRES_GEN_PLAF);
+        const cotisationIpresComp = Math.min(baseCotisationIpresComp, IPRES_COMP_PLAF) * IPRES_COMP_TAUX;
+        const totalIpres = cotisationIpresGen + cotisationIpresComp;
+
+        // IR
+        let ir = 0;
+        if (period === "annuel") {
+            ir = calculerIRSenegal(salaireBrut, parts);
+        } else {
+            const reveluAnnuel = salaireBrut * 12;
+            const irAnnuel = calculerIRSenegal(reveluAnnuel, parts);
+            ir = irAnnuel / 12;
+        }
+
+        // TRIMF
+        let trimf = 0;
+        if (trimfActive) {
+            const partsTrimf = parseFloat($("#partsTRIMF").value) || 1;
+            const trimfParPartAn = parseFloat($("#trimfParPartAn").value) || 20000;
+            trimf = (period === "mensuel") ? (trimfParPartAn * partsTrimf / 12) : (trimfParPartAn * partsTrimf);
+        }
+
+        const cfce = salaireBrut * CFCE_TAUX;
+        const salaireNet = salaireBrut - totalIpres - ir - trimf;
+
+        dernierCalcul = {
+            salaireBase,
+            salaireBrut,
+            totalIndemnites,
+            cotisationIpresGen,
+            cotisationIpresComp,
+            totalIpres,
+            ir,
+            trimf,
+            cfce,
+            salaireNet,
+            parts,
+            cadre,
+            period,
+            indemnites: [...indemnites],
+            mode: "brut-to-net"
+        };
+
+        updateUI(dernierCalcul);
+    }
+
+    function calcNetToBrut() {
+        const salaireNetDesire = parseFloat($("#salaireNetRecherche").value) || 0;
+        const parts = parseFloat($("#partsIRInverse").value) || 1;
+        trimfActive = $("#trimfActive").checked;
+        const cadre = $("#cadreInverse").value;
+        const period = $("#periodInverse").value;
+
+        if (salaireNetDesire <= 0) throw new Error("Veuillez entrer un salaire net > 0");
+
+        const totalIndemnites = indemnitesInverse.reduce((sum, ind) => sum + (ind.montant || 0), 0);
+        
+        // Calcul du brut par itération
+        const salaireBrutCalcule = calculerBrutFromNet(salaireNetDesire - totalIndemnites, parts, period, indemnitesInverse);
+        const salaireBrut = salaireBrutCalcule + totalIndemnites;
+
+        // Vérification avec le brut calculé
+        const cotisationIpresGen = Math.min(salaireBrut, IPRES_GEN_PLAF) * IPRES_GEN_TAUX;
+        const baseCotisationIpresComp = Math.max(0, salaireBrut - IPRES_GEN_PLAF);
+        const cotisationIpresComp = Math.min(baseCotisationIpresComp, IPRES_COMP_PLAF) * IPRES_COMP_TAUX;
+        const totalIpres = cotisationIpresGen + cotisationIpresComp;
+
+        let ir = 0;
+        if (period === "annuel") {
+            ir = calculerIRSenegal(salaireBrut, parts);
+        } else {
+            const reveluAnnuel = salaireBrut * 12;
+            const irAnnuel = calculerIRSenegal(reveluAnnuel, parts);
+            ir = irAnnuel / 12;
+        }
+
+        let trimf = 0;
+        if (trimfActive) {
+            const partsTrimf = parseFloat($("#partsTRIMF").value) || 1;
+            const trimfParPartAn = parseFloat($("#trimfParPartAn").value) || 20000;
+            trimf = (period === "mensuel") ? (trimfParPartAn * partsTrimf / 12) : (trimfParPartAn * partsTrimf);
+        }
+
+        const cfce = salaireBrut * CFCE_TAUX;
+        const salaireNetVerification = salaireBrut - totalIpres - ir - trimf;
+
+        $("#totalBrutCalcule").textContent = fmt(salaireBrut);
+
+        dernierCalcul = {
+            salaireBase: salaireBrutCalcule,
+            salaireBrut,
+            totalIndemnites,
+            cotisationIpresGen,
+            cotisationIpresComp,
+            totalIpres,
+            ir,
+            trimf,
+            cfce,
+            salaireNet: salaireNetVerification,
+            parts,
+            cadre,
+            period,
+            indemnites: [...indemnitesInverse],
+            mode: "net-to-brut",
+            salaireNetDesire
+        };
+
+        updateUI(dernierCalcul);
+    }
+
     function updateUI(results) {
         const tbody = $("#resultsBody");
+        const isInverse = results.mode === "net-to-brut";
+
         tbody.innerHTML = `
-            <tr><td>Salaire de base</td><td class="money">${fmt(results.salaireBase)}</td></tr>
+            <tr><td>${isInverse ? 'Salaire Brut Calculé' : 'Salaire de base'}</td><td class="money">${fmt(isInverse ? results.salaireBrut : results.salaireBase)}</td></tr>
             ${results.totalIndemnites > 0 ? `<tr><td>Indemnités</td><td class="money">${fmt(results.totalIndemnites)}</td></tr>` : ''}
             <tr class="highlight"><td>Salaire Brut</td><td class="money">${fmt(results.salaireBrut)}</td></tr>
             <tr><td>Cotisation IPRES Générale</td><td class="money negative">${fmt(results.cotisationIpresGen)}</td></tr>
@@ -692,7 +937,7 @@
         const summaryCards = $("#summaryCards");
         summaryCards.innerHTML = `
             <div class="summary-card">
-                <div class="label">Salaire Brut</div>
+                <div class="label">${isInverse ? 'Brut Requis' : 'Salaire Brut'}</div>
                 <div class="value">${fmt(results.salaireBrut)}</div>
             </div>
             <div class="summary-card">
@@ -700,12 +945,15 @@
                 <div class="value" style="color: var(--danger)">${fmt(results.totalIpres + results.ir + results.trimf)}</div>
             </div>
             <div class="summary-card">
-                <div class="label">Salaire NET</div>
+                <div class="label">${isInverse ? 'Net Obtenu' : 'Salaire NET'}</div>
                 <div class="value">${fmt(results.salaireNet)}</div>
             </div>
         `;
 
-        $("#status").innerHTML = `✅ Calcul effectué${trimfActive ? " • TRIMF activée" : ""}`;
+        const statusMsg = isInverse 
+            ? `✅ Brut calculé pour un net de ${fmt(results.salaireNetDesire)} FCFA`
+            : `✅ Calcul effectué${trimfActive ? " • TRIMF activée" : ""}`;
+        $("#status").innerHTML = statusMsg;
         $("#status").className = "status-message status-success";
     }
 
@@ -740,7 +988,7 @@
 
             const data = [
                 ["Élément", "Montant (FCFA)"],
-                ["Salaire de base", fmt(dernierCalcul.salaireBase)],
+                [dernierCalcul.mode === "net-to-brut" ? "Salaire Brut Calculé" : "Salaire de base", fmt(dernierCalcul.mode === "net-to-brut" ? dernierCalcul.salaireBrut : dernierCalcul.salaireBase)],
             ];
 
             if (dernierCalcul.totalIndemnites > 0) {
@@ -785,33 +1033,41 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        ajouterIndemnite();
+        ajouterIndemnite(false);
+        ajouterIndemnite(true);
 
         $("#calcBtn").addEventListener('click', calc);
         $("#pdfBtn").addEventListener('click', genererPDF);
-        $("#ajouterIndemnite").addEventListener('click', ajouterIndemnite);
+        $("#ajouterIndemnite").addEventListener('click', () => ajouterIndemnite(false));
+        $("#ajouterIndemniteInverse").addEventListener('click', () => ajouterIndemnite(true));
         $("#salaireBase").addEventListener('input', calculerTotalBrut);
+        $("#salaireNetRecherche").addEventListener('input', calc);
 
         $("#trimfActive").addEventListener('change', (e) => {
             $("#trimfOptions").style.display = e.target.checked ? 'block' : 'none';
+            calc();
         });
 
         $("#resetBtn").addEventListener('click', () => {
             dernierCalcul = null;
             indemnites = [];
+            indemnitesInverse = [];
             $("#salaireBase").value = '500000';
             $("#partsIR").value = '1';
+            $("#partsIRInverse").value = '1';
+            $("#salaireNetRecherche").value = '';
             $("#nomEmploye").value = '';
             $("#posteEmploye").value = '';
             $("#trimfActive").checked = false;
             $("#trimfOptions").style.display = 'none';
-            afficherIndemnites();
+            afficherIndemnites(false);
+            afficherIndemnites(true);
             $("#resultsBody").innerHTML = '<tr><td colspan="2" style="text-align:center; color: var(--text-muted);">Aucun calcul effectué</td></tr>';
             $("#status").innerHTML = "🔄 Formulaire réinitialisé";
             $("#status").className = "status-message status-info";
         });
 
-        document.querySelectorAll("#salaireBase, #partsIR, #period").forEach(el => {
+        document.querySelectorAll("#salaireBase, #partsIR, #period, #partsIRInverse, #periodInverse").forEach(el => {
             el.addEventListener('change', () => {
                 if (dernierCalcul) calc();
             });
