@@ -1,4 +1,3 @@
-/** TaxData.js generated */
 export const seuilsTRIMF = [
     { plafond: 84000, montant: 300 },
     { plafond: 167000, montant: 400 },
