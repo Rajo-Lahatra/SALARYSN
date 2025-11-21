@@ -1,10 +1,10 @@
-export const seuilsTRIMF = [
+const seuilsTRIMF = [
     { plafond: 84000, montant: 300 },
     { plafond: 167000, montant: 400 },
     { plafond: 1000000, montant: 500 }
 ];
 
-export const baremeIR = [
+const baremeIR = [
     [50000, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [51000, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [52000, 0, 0, 0, 0, 0, 0, 0, 0, 0],
